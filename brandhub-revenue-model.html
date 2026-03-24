@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>brandhub Revenue Model — Internal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #090C1C;
+            --surface: #0E1225;
+            --blue: #30B4E6;
+            --orange: #FF9119;
+            --purple: #9B6FE8;
+            --teal: #00C896;
+            --text: #EEF2F8;
+            --muted: #8898B5;
+            --blue-dark: #1a5a7a;
+            --orange-dark: #7a4a0a;
+            --purple-dark: #4a3a5a;
+            --teal-dark: #004a2a;
+            --green: #2ECC71;
+            --amber: #F0B429;
+            --green-dark: #0a4a1a;
+            --amber-dark: #6a4a00;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(136, 152, 181, 0.2);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .badge {
+            background: rgba(255, 145, 25, 0.15);
+            color: var(--orange);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* GRAND TOTAL BANNER */
+        .grand-total {
+            background: linear-gradient(135deg, rgba(14, 18, 37, 0.8), rgba(48, 180, 230, 0.1));
+            border: 1px solid rgba(48, 180, 230, 0.3);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .grand-total h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .grand-total-number {
+            font-size: 52px;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .breakdown-item {
+            background: rgba(14, 18, 37, 0.6);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .breakdown-item.platform { border-left-color: var(--blue); }
+        .breakdown-item.managed { border-left-color: var(--orange); }
+        .breakdown-item.production { border-left-color: var(--purple); }
+        .breakdown-item.distributor { border-left-color: var(--teal); }
+        .breakdown-item.vendor { border-left-color: var(--amber); }
+
+        .breakdown-label {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .breakdown-value {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .breakdown-item.platform .breakdown-value { color: var(--blue); }
+        .breakdown-item.managed .breakdown-value { color: var(--orange); }
+        .breakdown-item.production .breakdown-value { color: var(--purple); }
+        .breakdown-item.distributor .breakdown-value { color: var(--teal); }
+        .breakdown-item.vendor .breakdown-value { color: var(--amber); }
+
+        /* STREAM SECTION */
+        .stream-section {
+            margin-bottom: 48px;
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(136, 152, 181, 0.1);
+        }
+
+        .stream-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(136, 152, 181, 0.2);
+        }
+
+        .stream-section.platform .stream-header { background: rgba(48, 180, 230, 0.08); border-bottom-color: rgba(48, 180, 230, 0.3); }
+        .stream-section.managed .stream-header { background: rgba(255, 145, 25, 0.08); border-bottom-color: rgba(255, 145, 25, 0.3); }
+        .stream-section.production .stream-header { background: rgba(155, 111, 232, 0.08); border-bottom-color: rgba(155, 111, 232, 0.3); }
+        .stream-section.distributor .stream-header { background: rgba(0, 200, 150, 0.08); border-bottom-color: rgba(0, 200, 150, 0.3); }
+        .stream-section.vendor .stream-header { background: rgba(240, 180, 41, 0.08); border-bottom-color: rgba(240, 180, 41, 0.3); }
+
+        .stream-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .stream-section.platform .stream-title { color: var(--blue); }
+        .stream-section.managed .stream-title { color: var(--orange); }
+        .stream-section.production .stream-title { color: var(--purple); }
+        .stream-section.distributor .stream-title { color: var(--teal); }
+        .stream-section.vendor .stream-title { color: var(--amber); }
+
+        .stream-description {
+            font-size: 14px;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .stream-content {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 1024px) {
+            .stream-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        .stream-inputs, .stream-outputs {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stream-inputs h3, .stream-outputs h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .input-label-note {
+            font-size: 12px;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        input[type="number"], input[type="range"] {
+            font-size: 14px;
+            padding: 10px 12px;
+            border: 1px solid rgba(136, 152, 181, 0.2);
+            background: rgba(14, 18, 37, 0.6);
+            color: var(--text);
+            border-radius: 6px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-weight: 500;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        input[type="number"]:focus, input[type="range"]:focus {
+            outline: none;
+            border-color: rgba(48, 180, 230, 0.5);
+            background: rgba(48, 180, 230, 0.05);
+        }
+
+        input[type="range"] {
+            padding: 8px 0;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--blue);
+            cursor: pointer;
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 0 2px var(--blue);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--blue);
+            cursor: pointer;
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 0 2px var(--blue);
+        }
+
+        /* Remove spinner from number inputs */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"][type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .output-row {
+            padding: 12px;
+            background: rgba(14, 18, 37, 0.4);
+            border-radius: 6px;
+            border: 1px solid rgba(136, 152, 181, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .output-label {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .output-value {
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: var(--text);
+        }
+
+        .stream-section.platform .output-value { color: var(--blue); }
+        .stream-section.managed .output-value { color: var(--orange); }
+        .stream-section.production .output-value { color: var(--purple); }
+        .stream-section.distributor .output-value { color: var(--teal); }
+        .stream-section.vendor .output-value { color: var(--amber); }
+
+        .per-unit-example {
+            padding: 12px;
+            background: rgba(136, 152, 181, 0.05);
+            border: 1px solid rgba(136, 152, 181, 0.15);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .warning {
+            padding: 10px 12px;
+            background: rgba(255, 145, 25, 0.1);
+            border: 1px solid rgba(255, 145, 25, 0.3);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--orange);
+        }
+
+        .warning.hidden {
+            display: none;
+        }
+
+        /* CATEGORY BREAKDOWN */
+        .category-breakdown {
+            background: rgba(14, 18, 37, 0.4);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(136, 152, 181, 0.1);
+            margin-top: 8px;
+        }
+
+        .category-item {
+            display: grid;
+            grid-template-columns: 120px 1fr 80px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .category-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .category-slider {
+            position: relative;
+        }
+
+        .category-percent {
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+            font-family: 'Monaco', 'Courier New', monospace;
+            min-width: 40px;
+        }
+
+        .category-breakdown-warning {
+            margin-top: 8px;
+            padding: 8px 10px;
+            background: rgba(255, 145, 25, 0.1);
+            border: 1px solid rgba(255, 145, 25, 0.3);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--orange);
+            text-align: center;
+        }
+
+        .category-breakdown-warning.hidden {
+            display: none;
+        }
+
+        /* BREAKDOWN TABLE */
+        .summary-table {
+            margin-top: 48px;
+            margin-bottom: 48px;
+        }
+
+        .summary-table h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(136, 152, 181, 0.2);
+        }
+
+        thead {
+            background: rgba(136, 152, 181, 0.05);
+            border-bottom: 1px solid rgba(136, 152, 181, 0.2);
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-top: 1px solid rgba(136, 152, 181, 0.1);
+            font-size: 14px;
+        }
+
+        td:nth-child(2), td:nth-child(3) {
+            text-align: right;
+        }
+
+        tr.total {
+            background: rgba(48, 180, 230, 0.05);
+            font-weight: 700;
+            border-top: 2px solid rgba(48, 180, 230, 0.3);
+        }
+
+        tr.total td {
+            color: var(--blue);
+            border-top: 2px solid rgba(48, 180, 230, 0.3);
+        }
+
+        /* ONE DEAL CALLOUT */
+        .one-deal {
+            background: linear-gradient(135deg, rgba(155, 111, 232, 0.08), rgba(48, 180, 230, 0.08));
+            border: 1px solid rgba(155, 111, 232, 0.3);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 48px;
+        }
+
+        .one-deal h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .deal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .deal-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .deal-label {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .deal-value {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .deal-item.platform .deal-value { color: var(--blue); }
+        .deal-item.managed .deal-value { color: var(--orange); }
+        .deal-item.production .deal-value { color: var(--purple); }
+        .deal-item.total .deal-value { color: var(--teal); }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(136, 152, 181, 0.1);
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* NOTES */
+        .note {
+            margin-top: 8px;
+            padding: 8px 10px;
+            background: rgba(136, 152, 181, 0.05);
+            border-left: 3px solid rgba(48, 180, 230, 0.3);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .note strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .managed-note {
+            padding: 12px 14px;
+            background: rgba(255, 145, 25, 0.08);
+            border: 1px solid rgba(255, 145, 25, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .production-note {
+            padding: 12px 14px;
+            background: rgba(155, 111, 232, 0.08);
+            border: 1px solid rgba(155, 111, 232, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .distributor-note {
+            padding: 12px 14px;
+            background: rgba(0, 200, 150, 0.08);
+            border: 1px solid rgba(0, 200, 150, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .production-table {
+            width: 100%;
+            margin-top: 12px;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .production-table th,
+        .production-table td {
+            padding: 8px;
+            text-align: right;
+            border: 1px solid rgba(136, 152, 181, 0.1);
+            background: rgba(14, 18, 37, 0.4);
+        }
+
+        .production-table th {
+            background: rgba(136, 152, 181, 0.05);
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .production-table td:first-child,
+        .production-table th:first-child {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>brandhub Revenue Model</h1>
+            <div class="badge">Internal — Confidential</div>
+        </header>
+
+        <!-- GRAND TOTAL BANNER -->
+        <div class="grand-total">
+            <h2>Total Annual Revenue Opportunity</h2>
+            <div class="grand-total-number" id="grandTotal">$0</div>
+            <div class="breakdown">
+                <div class="breakdown-item platform">
+                    <div class="breakdown-label">Platform Fees</div>
+                    <div class="breakdown-value" id="breakdownPlatform">$0</div>
+                </div>
+                <div class="breakdown-item managed">
+                    <div class="breakdown-label">Managed Service</div>
+                    <div class="breakdown-value" id="breakdownManaged">$0</div>
+                </div>
+                <div class="breakdown-item production">
+                    <div class="breakdown-label">Production Margin</div>
+                    <div class="breakdown-value" id="breakdownProduction">$0</div>
+                </div>
+                <div class="breakdown-item distributor">
+                    <div class="breakdown-label">Distributor</div>
+                    <div class="breakdown-value" id="breakdownDistributor">$0</div>
+                </div>
+                </div>
+                <div class="breakdown-item vendor">
+                    <div class="breakdown-label">Vendor Subscriptions</div>
+                    <div class="breakdown-value" id="breakdownVendor">$0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STREAM 1: PLATFORM FEE -->
+        <div class="stream-section platform">
+            <div class="stream-header">
+                <div class="stream-title">Stream 1: brandhub Platform Fee</div>
+                <div class="stream-description">Flat annual SaaS fee per brand client. Not tied to spend. Not per-seat.</div>
+            </div>
+            <div class="stream-content">
+                <div class="stream-inputs">
+                    <h3>Assumptions</h3>
+                    <div class="input-group">
+                        <label class="input-label">Number of Brand Clients</label>
+                        <input type="number" id="platformClients" value="5" min="0" step="1" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Annual Platform Fee per Client</label>
+                        <input type="number" id="platformFeePerClient" value="48000" min="0" step="1000" oninput="recalculate()">
+                    </div>
+                </div>
+                <div class="stream-outputs">
+                    <h3>Annual Revenue</h3>
+                    <div class="output-row">
+                        <span class="output-label">Total Platform ARR</span>
+                        <span class="output-value" id="platformTotal">$0</span>
+                    </div>
+                    <div class="per-unit-example" id="platformExample">Per client: $48,000</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STREAM 2: MANAGED SERVICE -->
+        <div class="stream-section managed">
+            <div class="stream-header">
+                <div class="stream-title">Stream 2: Managed Service Fee</div>
+                <div class="stream-description">Optional service where brands pay Select to manage their POs. All POS spend flows through brandhub — Select charges a management fee on what it manages.</div>
+            </div>
+            <div class="stream-content">
+                <div class="stream-inputs">
+                    <h3>Assumptions</h3>
+                    <div class="managed-note">
+                        <strong>Third-Party Spend Only:</strong> Managed service fee applies only to the portion Select manages but does <em>not</em> produce. Where Select wins the production business (per Stream 3 win rates), it earns production margin on that spend instead — no managed service fee. Fee only applies to spend going to third-party vendors.
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Average Annual POS Spend per Client</label>
+                        <input type="number" id="managedPosSpend" value="2000000" min="0" step="50000" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Print Share of POS Spend (%)</label>
+                        <input type="range" id="managedPrintShare" value="22" min="0" max="100" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="managedPrintShareDisplay">22%</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Managed Service Fee on Print</label>
+                        <input type="range" id="managedPrintFee" value="5" min="0" max="20" step="0.5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="managedPrintFeeDisplay">5%</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Managed Service Fee on Non-Print (10–15%)</label>
+                        <input type="range" id="managedNonPrintFee" value="12" min="10" max="15" step="0.5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="managedNonPrintFeeDisplay">12%</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">% of Clients Who Opt Into Managed Service</label>
+                        <input type="range" id="managedOptIn" value="60" min="0" max="100" step="5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="managedOptInDisplay">60%</span>
+                    </div>
+                </div>
+                <div class="stream-outputs">
+                    <h3>Annual Revenue</h3>
+                    <div class="output-row">
+                        <span class="output-label">Third-Party Print Spend (fee applies)</span>
+                        <span class="output-value" id="managedPrintSpend">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Third-Party Non-Print Spend (fee applies)</span>
+                        <span class="output-value" id="managedNonPrintSpend">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Managed Service Fee on Print</span>
+                        <span class="output-value" id="managedPrintRevenue">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Managed Service Fee on Non-Print</span>
+                        <span class="output-value" id="managedNonPrintRevenue">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Total per Managed Client</span>
+                        <span class="output-value" id="managedPerClient">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Total Managed Service Revenue</span>
+                        <span class="output-value" id="managedTotal">$0</span>
+                    </div>
+                    <div class="per-unit-example" id="managedExample">Per $2M client: $22K from print + $187K from non-print = $209K managed service revenue</div>
+                </div>
+            </div>
+        </div>
+        <!-- STREAM 3: VENDOR NETWORK -->
+        <div class="stream-section vendor">
+            <div class="stream-header">
+                <div class="stream-title">Stream 3: Vendor Network</div>
+                <div class="stream-description">Vendors pay a % of the non-print, non-Select-produced spend that flows through their category on the brandhub platform. Vendors brought by existing brand clients are exempt — the fee only applies to spend flowing through brandhub's platform-sourced vendor network.</div>
+            </div>
+            <div class="stream-content">
+                <div class="stream-inputs">
+                    <h3>Assumptions</h3>
+                    <div class="managed-note" style="background: rgba(240,180,41,0.07); border-left: 3px solid rgba(240,180,41,0.5); border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: var(--muted);">
+                        <strong style="color: var(--amber);">How it works:</strong> Vendors pay a % of the non-print, non-Select-produced spend that flows through brandhub in their category. Print is excluded. Spend Select wins in production is excluded from the vendor fee — that spend earns production margin instead (Stream 4). The vendor fee applies only to third-party vendor spend processed through the platform.
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Average Annual POS Spend per Client</label>
+                        <input type="number" id="vendorPosSpend" value="2000000" min="0" step="50000" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Vendor Network Fee (% of third-party non-print spend)</label>
+                        <input type="range" id="vendorFeePercent" value="2" min="0.5" max="5" step="0.25" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="vendorFeePercentDisplay">2%</span>
+                    </div>
+                </div>
+                <div class="stream-outputs">
+                    <h3>Annual Revenue</h3>
+                    <div class="output-row">
+                        <span class="output-label">Total Non-Print Spend (all clients)</span>
+                        <span class="output-value" id="vendorNonPrintSpend">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Select-Produced Non-Print (→ earned as Stream 4 production margin)</span>
+                        <span class="output-value" id="vendorSelectProduced">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Third-Party Non-Print (fee applies)</span>
+                        <span class="output-value" id="vendorThirdPartySpend">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Total Vendor Network Revenue</span>
+                        <span class="output-value" id="vendorTotal">$0</span>
+                    </div>
+                    <div class="per-unit-example" id="vendorExample">2% of third-party non-print spend</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STREAM 4: PRODUCTION MARGIN -->
+        <div class="stream-section production">
+            <div class="stream-header">
+                <div class="stream-title">Stream 4: Select Production Margin</div>
+                <div class="stream-description">Select earns production revenue on categories it wins. This is the full top-line revenue from production — what brands pay Select to manufacture. Where Select both manages and produces a category, it earns production revenue only — no managed service fee on that same spend. Gross profit is shown separately for reference.</div>
+            </div>
+            <div class="stream-content">
+                <div class="stream-inputs">
+                    <h3>Assumptions</h3>
+                    <div class="production-note">
+                        <strong>Production Categories:</strong> Print is Select's core production business. Displays, wearables, on-premise, and specialty items represent growth categories where brandhub visibility creates new production opportunities.
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">POS Spend Category Breakdown (must sum to 100%)</label>
+                        <div class="category-breakdown">
+                            <div class="category-item">
+                                <div class="category-name">Displays</div>
+                                <input type="range" class="category-slider" id="catDisplays" value="33" min="0" max="100" oninput="recalculate()" style="flex: 1;">
+                                <div class="category-percent" id="catDisplaysPercent">33%</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-name">Print</div>
+                                <input type="range" class="category-slider" id="catPrint" value="22" min="0" max="100" oninput="recalculate()" style="flex: 1;">
+                                <div class="category-percent" id="catPrintPercent">22%</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-name">Wearables</div>
+                                <input type="range" class="category-slider" id="catWearables" value="15" min="0" max="100" oninput="recalculate()" style="flex: 1;">
+                                <div class="category-percent" id="catWearablesPercent">15%</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-name">On-Premise</div>
+                                <input type="range" class="category-slider" id="catOnPremise" value="15" min="0" max="100" oninput="recalculate()" style="flex: 1;">
+                                <div class="category-percent" id="catOnPremisePercent">15%</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-name">All Other</div>
+                                <input type="range" class="category-slider" id="catOther" value="15" min="0" max="100" oninput="recalculate()" style="flex: 1;">
+                                <div class="category-percent" id="catOtherPercent">15%</div>
+                            </div>
+                            <div class="category-breakdown-warning" id="categoryWarning">Categories must sum to 100%</div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Average POS Spend per Client</label>
+                        <input type="number" id="productionPosSpend" value="2000000" min="0" step="50000" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Select Production Win Rate — Print</label>
+                        <input type="range" id="productionWinPrint" value="85" min="0" max="100" step="5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="productionWinPrintDisplay">85%</span>
+                        <span class="input-label-note">Select produces almost all print for its clients</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Select Production Win Rate — Displays</label>
+                        <input type="range" id="productionWinDisplays" value="35" min="0" max="100" step="5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="productionWinDisplaysDisplay">35%</span>
+                        <span class="input-label-note">Select competes with specialty display vendors</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Select Production Win Rate — Wearables</label>
+                        <input type="range" id="productionWinWearables" value="25" min="0" max="100" step="5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="productionWinWearablesDisplay">25%</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Select Production Win Rate — On-Premise</label>
+                        <input type="range" id="productionWinOnPremise" value="20" min="0" max="100" step="5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="productionWinOnPremiseDisplay">20%</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Select Production Win Rate — All Other</label>
+                        <input type="range" id="productionWinOther" value="15" min="0" max="100" step="5" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="productionWinOtherDisplay">15%</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Select Average Gross Margin (% of production revenue — for reference)</label>
+                        <input type="range" id="productionMarginPercent" value="28" min="0" max="50" step="1" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="productionMarginPercentDisplay">28%</span>
+                    </div>
+                </div>
+                <div class="stream-outputs">
+                    <h3>Per-Category Revenue</h3>
+                    <table class="production-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Spend</th>
+                                <th>Win Rate</th>
+                                <th>Gross Margin</th>
+                                <th>Production Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Displays</td>
+                                <td id="prodDispSpend">$0</td>
+                                <td id="prodDispWin">0%</td>
+                                <td id="prodDispMargin">28%</td>
+                                <td id="prodDispRevenue">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Print</td>
+                                <td id="prodPrintSpend">$0</td>
+                                <td id="prodPrintWin">0%</td>
+                                <td id="prodPrintMargin">28%</td>
+                                <td id="prodPrintRevenue">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Wearables</td>
+                                <td id="prodWearSpend">$0</td>
+                                <td id="prodWearWin">0%</td>
+                                <td id="prodWearMargin">28%</td>
+                                <td id="prodWearRevenue">$0</td>
+                            </tr>
+                            <tr>
+                                <td>On-Premise</td>
+                                <td id="prodOnPremSpend">$0</td>
+                                <td id="prodOnPremWin">0%</td>
+                                <td id="prodOnPremMargin">28%</td>
+                                <td id="prodOnPremRevenue">$0</td>
+                            </tr>
+                            <tr>
+                                <td>All Other</td>
+                                <td id="prodOtherSpend">$0</td>
+                                <td id="prodOtherWin">0%</td>
+                                <td id="prodOtherMargin">28%</td>
+                                <td id="prodOtherRevenue">$0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="output-row" style="margin-top: 12px;">
+                        <span class="output-label">Production Revenue per Client</span>
+                        <span class="output-value" id="productionPerClient">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">Total Production Revenue <span id="productionClientsNote" style="font-weight:400; font-size:11px; color:var(--muted);"></span></span>
+                        <span class="output-value" id="productionTotal">$0</span>
+                    </div>
+                    <div class="output-row" style="opacity:0.65; margin-top:4px;">
+                        <span class="output-label" style="font-size:12px;">Est. Gross Profit <span id="productionGrossProfitNote" style="font-size:11px; color:var(--muted);"></span></span>
+                        <span class="output-value" id="productionGrossProfit" style="font-size:14px;">$0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STREAM 5: DISTRIBUTOR -->
+        <div class="stream-section distributor">
+            <div class="stream-header">
+                <div class="stream-title">Stream 5: Distributor Network Revenue</div>
+                <div class="stream-description">brandhub enables distributors to run structured POS programs for their brand portfolio. Three revenue streams flow from each distributor partnership.</div>
+            </div>
+            <div class="stream-content">
+                <div class="stream-inputs">
+                    <h3>Assumptions</h3>
+                    <div class="distributor-note">
+                        <strong>Distributor Model:</strong> Based on the SGWS distributor model. Note: Vendors brought by existing brand clients are not charged additional fees — the distributor model is a separate relationship.
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Number of Distributor Partners</label>
+                        <input type="number" id="distPartners" value="1" min="0" step="1" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Average Brands per Distributor</label>
+                        <input type="number" id="distBrandsPerPartner" value="40" min="0" step="1" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Average States per Brand</label>
+                        <input type="number" id="distStatesPerBrand" value="3" min="0" step="0.5" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Minimum Brand Commitment per State/Year</label>
+                        <input type="number" id="distCommitmentPerState" value="25000" min="0" step="5000" oninput="recalculate()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">% Cost Savings from Pooled Buying</label>
+                        <input type="range" id="distPooledSavings" value="12" min="0" max="30" step="1" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="distPooledSavingsDisplay">12%</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Distributor Markup on Select Production</label>
+                        <input type="range" id="distMarkup" value="18" min="0" max="30" step="1" oninput="recalculate()">
+                        <span style="font-size: 12px; color: var(--muted);" id="distMarkupDisplay">18%</span>
+                    </div>
+                </div>
+                <div class="stream-outputs">
+                    <h3>Annual Revenue</h3>
+                    <div class="output-row">
+                        <span class="output-label">Total Commitment Pool</span>
+                        <span class="output-value" id="distCommitmentTotal">$0</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label">The Pooled Advantage (Savings)</span>
+                        <span class="output-value" id="distPooledTotal">$0</span>
+                    </div>
+                    <div class="per-unit-example">Distributor gets {{ commitment × savings % }}</div>
+                    <div class="output-row" style="margin-top: 16px;">
+                        <span class="output-label">The Spread (Markup Revenue)</span>
+                        <span class="output-value" id="distSpreadTotal">$0</span>
+                    </div>
+                    <div class="per-unit-example">Distributor markup: {{ commitment × markup % }} (This is distributor revenue, not Select's direct revenue. But each distributor deal creates Select production relationships worth modeling.)</div>
+                    <div class="output-row" style="margin-top: 16px;">
+                        <span class="output-label">Total Distributor Revenue</span>
+                        <span class="output-value" id="distTotal">$0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONE DEAL CALLOUT -->
+        <div class="one-deal">
+            <h2>What One Brand Client Deal Looks Like</h2>
+            <p style="color: var(--muted); font-size: 13px; margin-bottom: 20px;">Based on a single brand client with average POS spending:</p>
+            <div class="deal-grid">
+                <div class="deal-item platform">
+                    <div class="deal-label">Platform Fee</div>
+                    <div class="deal-value" id="dealPlatform">$48,000</div>
+                </div>
+                </div>
+                <div class="deal-item managed">
+                    <div class="deal-label">Managed Service (if opted)</div>
+                    <div class="deal-value" id="dealManaged">$125,000</div>
+                </div>
+                <div class="deal-item production">
+                    <div class="deal-label">Production Revenue</div>
+                    <div class="deal-value" id="dealProduction">$75,000</div>
+                </div>
+                <div class="deal-item total">
+                    <div class="deal-label">Total Value per Client/Year</div>
+                    <div class="deal-value" id="dealTotal">$248,000</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUMMARY TABLE -->
+        <div class="summary-table">
+            <h2>Revenue Summary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Revenue Stream</th>
+                        <th>Annual Revenue</th>
+                        <th>% of Total</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>brandhub Platform Fees</td>
+                        <td id="sumPlatform">$0</td>
+                        <td id="sumPlatformPct">0%</td>
+                        <td id="sumPlatformNotes">5 clients × $48K</td>
+                    </tr>
+                    <tr>
+                        <td>Managed Service — Print</td>
+                        <td id="sumManagedPrint">$0</td>
+                        <td id="sumManagedPrintPct">0%</td>
+                        <td id="sumManagedPrintNotes">60% opt-in, 5% fee</td>
+                    </tr>
+                    <tr>
+                        <td>Managed Service — Non-Print</td>
+                        <td id="sumManagedNonPrint">$0</td>
+                        <td id="sumManagedNonPrintPct">0%</td>
+                        <td id="sumManagedNonPrintNotes">60% opt-in, 12% fee</td>
+                    </tr>
+                    <tr>
+                        <td>Vendor Network Fee</td>
+                        <td id="sumVendor">$0</td>
+                        <td id="sumVendorPct">0%</td>
+                        <td id="sumVendorNotes">50 vendors × $3,600/yr</td>
+                    </tr>
+                    <tr>
+                        <td>Select Production Revenue</td>
+                        <td id="sumProduction">$0</td>
+                        <td id="sumProductionPct">0%</td>
+                        <td id="sumProductionNotes">Avg 28% margin across categories</td>
+                    </tr>
+                    <tr>
+                        <td>Distributor — Commitment Pool</td>
+                        <td id="sumDistCommit">$0</td>
+                        <td id="sumDistCommitPct">0%</td>
+                        <td id="sumDistCommitNotes">1 partner, 40 brands, 3 states, $25K commitment</td>
+                    </tr>
+                    <tr>
+                        <td>Distributor — Pooled Savings</td>
+                        <td id="sumDistPooled">$0</td>
+                        <td id="sumDistPooledPct">0%</td>
+                        <td id="sumDistPooledNotes">12% of commitment pool</td>
+                    </tr>
+                    <tr>
+                        <td>Distributor — The Spread</td>
+                        <td id="sumDistSpread">$0</td>
+                        <td id="sumDistSpreadPct">0%</td>
+                        <td id="sumDistSpreadNotes">18% markup on commitment pool</td>
+                    </tr>
+                    <tr class="total">
+                        <td><strong>TOTAL</strong></td>
+                        <td id="sumTotal">$0</td>
+                        <td id="sumTotalPct">100%</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            Internal — Confidential
+        </footer>
+    </div>
+
+    <script>
+        function formatCurrency(value) {
+            return '$' + Math.round(value).toLocaleString('en-US');
+        }
+
+        function formatPercent(value) {
+            return Math.round(value * 10) / 10 + '%';
+        }
+
+        function recalculate() {
+            // === STREAM 1: PLATFORM FEE ===
+            const platformClients = parseFloat(document.getElementById('platformClients').value) || 0;
+            const platformFeePerClient = parseFloat(document.getElementById('platformFeePerClient').value) || 0;
+            const platformTotal = platformClients * platformFeePerClient;
+
+            // === STREAM 2: MANAGED SERVICE ===
+            const managedPosSpend = parseFloat(document.getElementById('managedPosSpend').value) || 0;
+            const managedPrintShare = parseFloat(document.getElementById('managedPrintShare').value) || 0;
+            const managedPrintFee = parseFloat(document.getElementById('managedPrintFee').value) || 0;
+            const managedNonPrintFee = parseFloat(document.getElementById('managedNonPrintFee').value) || 0;
+            const managedOptIn = parseFloat(document.getElementById('managedOptIn').value) || 0;
+
+            // Read production win rates and category mix (needed to compute third-party portions)
+            const _winPrint     = parseFloat(document.getElementById('productionWinPrint').value)     || 0;
+            const _winDisplays  = parseFloat(document.getElementById('productionWinDisplays').value)  || 0;
+            const _winWearables = parseFloat(document.getElementById('productionWinWearables').value) || 0;
+            const _winOnPremise = parseFloat(document.getElementById('productionWinOnPremise').value) || 0;
+            const _winOther     = parseFloat(document.getElementById('productionWinOther').value)     || 0;
+            const _catDisplays  = parseFloat(document.getElementById('catDisplays').value)  || 0;
+            const _catWearables = parseFloat(document.getElementById('catWearables').value) || 0;
+            const _catOnPremise = parseFloat(document.getElementById('catOnPremise').value) || 0;
+            const _catOther     = parseFloat(document.getElementById('catOther').value)     || 0;
+
+            const managedPrintSpend    = managedPosSpend * (managedPrintShare / 100);
+            const managedNonPrintSpend = managedPosSpend * (1 - managedPrintShare / 100);
+
+            // Fee only on the portion Select does NOT produce (third-party spend)
+            const managedPrintThirdParty = managedPrintSpend * (1 - _winPrint / 100);
+            const managedPrintRevenue    = managedPrintThirdParty * (managedPrintFee / 100);
+
+            // For non-print, weight each category's third-party share by its relative slice of non-print spend
+            const _nonPrintCatSum = _catDisplays + _catWearables + _catOnPremise + _catOther;
+            let managedNonPrintThirdParty;
+            if (_nonPrintCatSum > 0) {
+                managedNonPrintThirdParty = managedNonPrintSpend * (
+                    (_catDisplays  / _nonPrintCatSum) * (1 - _winDisplays  / 100) +
+                    (_catWearables / _nonPrintCatSum) * (1 - _winWearables / 100) +
+                    (_catOnPremise / _nonPrintCatSum) * (1 - _winOnPremise / 100) +
+                    (_catOther     / _nonPrintCatSum) * (1 - _winOther     / 100)
+                );
+            } else {
+                managedNonPrintThirdParty = managedNonPrintSpend;
+            }
+            const managedNonPrintRevenue = managedNonPrintThirdParty * (managedNonPrintFee / 100);
+
+            const managedPerClient = managedPrintRevenue + managedNonPrintRevenue;
+            const managedTotal     = managedPerClient * platformClients * (managedOptIn / 100);
+
+            // === STREAM 3: VENDOR NETWORK FEE ===
+            // % of non-print, non-Select-produced spend flowing through the platform
+            const vendorPosSpend    = parseFloat(document.getElementById('vendorPosSpend').value)    || 0;
+            const vendorFeePercent  = parseFloat(document.getElementById('vendorFeePercent').value)  || 0;
+
+            // Total non-print spend across all clients (using category breakdown from Stream 2 reads)
+            const vendorNonPrintPerClient = vendorPosSpend * (
+                (_catDisplays + _catWearables + _catOnPremise + _catOther) / 100
+            );
+            const vendorNonPrintTotal = vendorNonPrintPerClient * platformClients;
+
+            // Select-produced non-print (excluded from vendor fee — captured in Stream 4 production margin)
+            const vendorSelectProducedPerClient = vendorPosSpend * (
+                (_catDisplays  / 100) * (_winDisplays  / 100) +
+                (_catWearables / 100) * (_winWearables / 100) +
+                (_catOnPremise / 100) * (_winOnPremise / 100) +
+                (_catOther     / 100) * (_winOther     / 100)
+            );
+            const vendorSelectProduced = vendorSelectProducedPerClient * platformClients;
+
+            // Third-party non-print = total non-print minus what Select produces
+            const vendorThirdPartySpend = vendorNonPrintTotal - vendorSelectProduced;
+            const vendorTotal           = vendorThirdPartySpend * (vendorFeePercent / 100);
+
+            // === STREAM 4: PRODUCTION ===
+            const productionPosSpend = parseFloat(document.getElementById('productionPosSpend').value) || 0;
+            const catDisplays = parseFloat(document.getElementById('catDisplays').value) || 0;
+            const catPrint = parseFloat(document.getElementById('catPrint').value) || 0;
+            const catWearables = parseFloat(document.getElementById('catWearables').value) || 0;
+            const catOnPremise = parseFloat(document.getElementById('catOnPremise').value) || 0;
+            const catOther = parseFloat(document.getElementById('catOther').value) || 0;
+
+            const catTotal = catDisplays + catPrint + catWearables + catOnPremise + catOther;
+            const categoryWarning = document.getElementById('categoryWarning');
+            if (Math.abs(catTotal - 100) > 0.1) {
+                categoryWarning.classList.remove('hidden');
+            } else {
+                categoryWarning.classList.add('hidden');
+            }
+
+            const productionWinPrint = parseFloat(document.getElementById('productionWinPrint').value) || 0;
+            const productionWinDisplays = parseFloat(document.getElementById('productionWinDisplays').value) || 0;
+            const productionWinWearables = parseFloat(document.getElementById('productionWinWearables').value) || 0;
+            const productionWinOnPremise = parseFloat(document.getElementById('productionWinOnPremise').value) || 0;
+            const productionWinOther = parseFloat(document.getElementById('productionWinOther').value) || 0;
+            const productionMarginPercent = parseFloat(document.getElementById('productionMarginPercent').value) || 0;
+
+            const prodDispSpend = productionPosSpend * (catDisplays / 100);
+            const prodPrintSpend = productionPosSpend * (catPrint / 100);
+            const prodWearSpend = productionPosSpend * (catWearables / 100);
+            const prodOnPremSpend = productionPosSpend * (catOnPremise / 100);
+            const prodOtherSpend = productionPosSpend * (catOther / 100);
+
+            const prodDispRevenue = prodDispSpend * (productionWinDisplays / 100);
+            const prodPrintRevenue = prodPrintSpend * (productionWinPrint / 100);
+            const prodWearRevenue = prodWearSpend * (productionWinWearables / 100);
+            const prodOnPremRevenue = prodOnPremSpend * (productionWinOnPremise / 100);
+            const prodOtherRevenue = prodOtherSpend * (productionWinOther / 100);
+
+            const productionPerClient = prodDispRevenue + prodPrintRevenue + prodWearRevenue + prodOnPremRevenue + prodOtherRevenue;
+            const productionTotal = productionPerClient * platformClients;
+            const productionGrossProfit = productionTotal * (productionMarginPercent / 100);
+
+            // === STREAM 5: DISTRIBUTOR ===
+            const distPartners = parseFloat(document.getElementById('distPartners').value) || 0;
+            const distBrandsPerPartner = parseFloat(document.getElementById('distBrandsPerPartner').value) || 0;
+            const distStatesPerBrand = parseFloat(document.getElementById('distStatesPerBrand').value) || 0;
+            const distCommitmentPerState = parseFloat(document.getElementById('distCommitmentPerState').value) || 0;
+            const distPooledSavings = parseFloat(document.getElementById('distPooledSavings').value) || 0;
+            const distMarkup = parseFloat(document.getElementById('distMarkup').value) || 0;
+
+            const distCommitmentTotal = distPartners * distBrandsPerPartner * distStatesPerBrand * distCommitmentPerState;
+            const distPooledTotal = distCommitmentTotal * (distPooledSavings / 100);
+            const distSpreadTotal = distCommitmentTotal * (distMarkup / 100);
+            const distTotal = distPooledTotal + distSpreadTotal;
+
+            // === GRAND TOTAL ===
+            const grandTotal = platformTotal + managedTotal + vendorTotal + productionTotal + distTotal;
+
+            // === UPDATE DOM ===
+            document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
+            document.getElementById('breakdownPlatform').textContent = formatCurrency(platformTotal);
+            document.getElementById('breakdownManaged').textContent = formatCurrency(managedTotal);
+            document.getElementById('breakdownProduction').textContent = formatCurrency(productionTotal);
+            document.getElementById('breakdownDistributor').textContent = formatCurrency(distTotal);
+
+            // PLATFORM
+            document.getElementById('platformTotal').textContent = formatCurrency(platformTotal);
+            document.getElementById('platformExample').textContent = 'Per client: ' + formatCurrency(platformFeePerClient);
+
+            // MANAGED
+            document.getElementById('managedPrintShareDisplay').textContent = managedPrintShare + '%';
+            document.getElementById('managedPrintFeeDisplay').textContent = managedPrintFee + '%';
+            document.getElementById('managedNonPrintFeeDisplay').textContent = managedNonPrintFee + '%';
+            document.getElementById('managedOptInDisplay').textContent = managedOptIn + '%';
+            document.getElementById('managedPrintSpend').textContent = formatCurrency(managedPrintThirdParty);
+            document.getElementById('managedNonPrintSpend').textContent = formatCurrency(managedNonPrintThirdParty);
+            document.getElementById('managedPrintRevenue').textContent = formatCurrency(managedPrintRevenue);
+            document.getElementById('managedNonPrintRevenue').textContent = formatCurrency(managedNonPrintRevenue);
+            document.getElementById('managedPerClient').textContent = formatCurrency(managedPerClient);
+            document.getElementById('managedTotal').textContent = formatCurrency(managedTotal);
+            document.getElementById('managedExample').textContent = 'Per $' + (managedPosSpend / 1000000).toFixed(1) + 'M client: ' + formatCurrency(managedPrintRevenue) + ' from 3rd-party print + ' + formatCurrency(managedNonPrintRevenue) + ' from 3rd-party non-print = ' + formatCurrency(managedPerClient) + ' managed service revenue (Select-produced spend excluded)';
+
+            // VENDOR NETWORK FEE
+            document.getElementById('vendorFeePercentDisplay').textContent = vendorFeePercent + '%';
+            document.getElementById('vendorNonPrintSpend').textContent = formatCurrency(vendorNonPrintTotal);
+            document.getElementById('vendorSelectProduced').textContent = formatCurrency(vendorSelectProduced);
+            document.getElementById('vendorThirdPartySpend').textContent = formatCurrency(vendorThirdPartySpend);
+            document.getElementById('vendorTotal').textContent = formatCurrency(vendorTotal);
+            document.getElementById('vendorExample').textContent = vendorFeePercent + '% of ' + formatCurrency(vendorThirdPartySpend) + ' third-party non-print spend = ' + formatCurrency(vendorTotal);
+            document.getElementById('breakdownVendor').textContent = formatCurrency(vendorTotal);
+
+            // PRODUCTION
+            document.getElementById('catDisplaysPercent').textContent = catDisplays.toFixed(1) + '%';
+            document.getElementById('catPrintPercent').textContent = catPrint.toFixed(1) + '%';
+            document.getElementById('catWearablesPercent').textContent = catWearables.toFixed(1) + '%';
+            document.getElementById('catOnPremisePercent').textContent = catOnPremise.toFixed(1) + '%';
+            document.getElementById('catOtherPercent').textContent = catOther.toFixed(1) + '%';
+            document.getElementById('productionWinPrintDisplay').textContent = productionWinPrint + '%';
+            document.getElementById('productionWinDisplaysDisplay').textContent = productionWinDisplays + '%';
+            document.getElementById('productionWinWearablesDisplay').textContent = productionWinWearables + '%';
+            document.getElementById('productionWinOnPremiseDisplay').textContent = productionWinOnPremise + '%';
+            document.getElementById('productionWinOtherDisplay').textContent = productionWinOther + '%';
+            document.getElementById('productionMarginPercentDisplay').textContent = productionMarginPercent + '%';
+
+            document.getElementById('prodDispSpend').textContent = formatCurrency(prodDispSpend);
+            document.getElementById('prodDispWin').textContent = productionWinDisplays + '%';
+            document.getElementById('prodDispMargin').textContent = productionMarginPercent + '%';
+            document.getElementById('prodDispRevenue').textContent = formatCurrency(prodDispRevenue);
+
+            document.getElementById('prodPrintSpend').textContent = formatCurrency(prodPrintSpend);
+            document.getElementById('prodPrintWin').textContent = productionWinPrint + '%';
+            document.getElementById('prodPrintMargin').textContent = productionMarginPercent + '%';
+            document.getElementById('prodPrintRevenue').textContent = formatCurrency(prodPrintRevenue);
+
+            document.getElementById('prodWearSpend').textContent = formatCurrency(prodWearSpend);
+            document.getElementById('prodWearWin').textContent = productionWinWearables + '%';
+            document.getElementById('prodWearMargin').textContent = productionMarginPercent + '%';
+            document.getElementById('prodWearRevenue').textContent = formatCurrency(prodWearRevenue);
+
+            document.getElementById('prodOnPremSpend').textContent = formatCurrency(prodOnPremSpend);
+            document.getElementById('prodOnPremWin').textContent = productionWinOnPremise + '%';
+            document.getElementById('prodOnPremMargin').textContent = productionMarginPercent + '%';
+            document.getElementById('prodOnPremRevenue').textContent = formatCurrency(prodOnPremRevenue);
+
+            document.getElementById('prodOtherSpend').textContent = formatCurrency(prodOtherSpend);
+            document.getElementById('prodOtherWin').textContent = productionWinOther + '%';
+            document.getElementById('prodOtherMargin').textContent = productionMarginPercent + '%';
+            document.getElementById('prodOtherRevenue').textContent = formatCurrency(prodOtherRevenue);
+
+            document.getElementById('productionPerClient').textContent = formatCurrency(productionPerClient);
+            document.getElementById('productionTotal').textContent = formatCurrency(productionTotal);
+            document.getElementById('productionClientsNote').textContent = '(' + formatCurrency(productionPerClient) + ' × ' + platformClients + ' clients)';
+            document.getElementById('productionGrossProfit').textContent = formatCurrency(productionGrossProfit);
+            document.getElementById('productionGrossProfitNote').textContent = '(@ ' + productionMarginPercent + '% gross margin)';
+
+            // DISTRIBUTOR
+            document.getElementById('distPooledSavingsDisplay').textContent = distPooledSavings + '%';
+            document.getElementById('distMarkupDisplay').textContent = distMarkup + '%';
+            document.getElementById('distCommitmentTotal').textContent = formatCurrency(distCommitmentTotal);
+            document.getElementById('distPooledTotal').textContent = formatCurrency(distPooledTotal);
+            document.getElementById('distSpreadTotal').textContent = formatCurrency(distSpreadTotal);
+            document.getElementById('distTotal').textContent = formatCurrency(distTotal);
+
+            // ONE DEAL
+            document.getElementById('dealPlatform').textContent = formatCurrency(platformFeePerClient);
+            document.getElementById('dealManaged').textContent = formatCurrency(managedPerClient * (managedOptIn / 100));
+            document.getElementById('dealProduction').textContent = formatCurrency(productionPerClient);
+            document.getElementById('dealTotal').textContent = formatCurrency(platformFeePerClient + managedPerClient * (managedOptIn / 100) + productionPerClient);
+
+            // SUMMARY TABLE
+            const managedPrintTotal = managedPrintRevenue * platformClients * (managedOptIn / 100);
+            const managedNonPrintTotal = managedNonPrintRevenue * platformClients * (managedOptIn / 100);
+
+            document.getElementById('sumPlatform').textContent = formatCurrency(platformTotal);
+            document.getElementById('sumPlatformPct').textContent = formatPercent((platformTotal / grandTotal) * 100);
+            document.getElementById('sumPlatformNotes').textContent = platformClients + ' clients × ' + formatCurrency(platformFeePerClient);
+
+            document.getElementById('sumManagedPrint').textContent = formatCurrency(managedPrintTotal);
+            document.getElementById('sumManagedPrintPct').textContent = formatPercent((managedPrintTotal / grandTotal) * 100);
+            document.getElementById('sumManagedPrintNotes').textContent = managedOptIn + '% opt-in, ' + managedPrintFee + '% fee';
+
+            document.getElementById('sumManagedNonPrint').textContent = formatCurrency(managedNonPrintTotal);
+            document.getElementById('sumManagedNonPrintPct').textContent = formatPercent((managedNonPrintTotal / grandTotal) * 100);
+            document.getElementById('sumManagedNonPrintNotes').textContent = managedOptIn + '% opt-in, ' + managedNonPrintFee + '% fee';
+
+            document.getElementById('sumVendor').textContent = formatCurrency(vendorTotal);
+            document.getElementById('sumVendorPct').textContent = formatPercent((vendorTotal / grandTotal) * 100);
+            document.getElementById('sumVendorNotes').textContent = vendorFeePercent + '% of ' + formatCurrency(vendorThirdPartySpend) + ' third-party non-print';
+
+            document.getElementById('sumProduction').textContent = formatCurrency(productionTotal);
+            document.getElementById('sumProductionPct').textContent = formatPercent((productionTotal / grandTotal) * 100);
+            document.getElementById('sumProductionNotes').textContent = 'Full production revenue (est. ' + productionMarginPercent + '% gross margin = ' + formatCurrency(productionGrossProfit) + ' gross profit)';
+
+            document.getElementById('sumDistCommit').textContent = formatCurrency(distCommitmentTotal);
+            document.getElementById('sumDistCommitPct').textContent = formatPercent((distCommitmentTotal / grandTotal) * 100);
+            document.getElementById('sumDistCommitNotes').textContent = distPartners + ' partner, ' + distBrandsPerPartner + ' brands, ' + distStatesPerBrand + ' states, ' + formatCurrency(distCommitmentPerState) + ' commitment';
+
+            document.getElementById('sumDistPooled').textContent = formatCurrency(distPooledTotal);
+            document.getElementById('sumDistPooledPct').textContent = formatPercent((distPooledTotal / grandTotal) * 100);
+            document.getElementById('sumDistPooledNotes').textContent = distPooledSavings + '% of commitment pool';
+
+            document.getElementById('sumDistSpread').textContent = formatCurrency(distSpreadTotal);
+            document.getElementById('sumDistSpreadPct').textContent = formatPercent((distSpreadTotal / grandTotal) * 100);
+            document.getElementById('sumDistSpreadNotes').textContent = distMarkup + '% markup on commitment pool';
+
+            document.getElementById('sumTotal').textContent = formatCurrency(grandTotal);
+            document.getElementById('sumTotalPct').textContent = '100%';
+        }
+
+        // Initial calculation
+        recalculate();
+    </script>
+</body>
+</html>
