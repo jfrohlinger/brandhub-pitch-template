@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>brandhub · Internal Strategy — March 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #30B4E6;
+            --orange: #FF9119;
+            --purple: #9B6FE8;
+            --bg: #090C1C;
+            --surface: #0E1225;
+            --text: #EEF2F8;
+            --muted: #8898B5;
+            --border: #1A1F35;
+            --success: #00C896;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sticky Navigation */
+        nav.sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        nav.sidebar h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        nav.sidebar ul {
+            list-style: none;
+        }
+
+        nav.sidebar li {
+            margin-bottom: 0.75rem;
+        }
+
+        nav.sidebar a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        nav.sidebar a:hover {
+            color: var(--blue);
+            border-left-color: var(--blue);
+            padding-left: 1rem;
+        }
+
+        nav.sidebar a.active {
+            color: var(--blue);
+            border-left-color: var(--blue);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 220px;
+            padding: 0;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 6rem 4rem;
+            border-bottom: 1px solid var(--border);
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        .section:nth-child(5) { animation-delay: 0.5s; }
+        .section:nth-child(6) { animation-delay: 0.6s; }
+        .section:nth-child(7) { animation-delay: 0.7s; }
+        .section:nth-child(8) { animation-delay: 0.8s; }
+        .section:nth-child(9) { animation-delay: 0.9s; }
+        .section:nth-child(10) { animation-delay: 1s; }
+
+        /* Header Section */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(48, 180, 230, 0.05) 0%, rgba(155, 111, 232, 0.05) 100%);
+        }
+
+        .hero::before {
+            content: 'INTERNAL';
+            position: absolute;
+            top: 2rem;
+            right: 4rem;
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(48, 180, 230, 0.08);
+            opacity: 0.3;
+            letter-spacing: 4px;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(255, 145, 25, 0.15);
+            border: 1px solid var(--orange);
+            color: var(--orange);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .date-label {
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat {
+            text-align: left;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--blue);
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text);
+            max-width: 800px;
+            line-height: 1.8;
+        }
+
+        .highlight-box {
+            background-color: rgba(48, 180, 230, 0.08);
+            border-left: 4px solid var(--blue);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 2px;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        .warning-box {
+            background-color: rgba(255, 145, 25, 0.08);
+            border-left: 4px solid var(--orange);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 2px;
+        }
+
+        .warning-box p {
+            margin-bottom: 0;
+            font-size: 1.05rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-box {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .select-metric {
+            color: var(--blue);
+        }
+
+        .competitor-metric {
+            color: var(--muted);
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 3rem 0;
+        }
+
+        .callout {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background-color: rgba(155, 111, 232, 0.08);
+            border: 1px solid rgba(155, 111, 232, 0.2);
+            border-radius: 4px;
+        }
+
+        .callout-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .callout-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .list-bullet {
+            color: var(--blue);
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .scenario-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+        }
+
+        .scenario-table th,
+        .scenario-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .scenario-table th {
+            background-color: rgba(48, 180, 230, 0.1);
+            color: var(--blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 1px;
+        }
+
+        .scenario-table tr:hover {
+            background-color: rgba(48, 180, 230, 0.05);
+        }
+
+        .value-highlight {
+            color: var(--blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .value-accent {
+            color: var(--purple);
+            font-weight: 700;
+        }
+
+        .footnote {
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-intro {
+            color: var(--muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .principle-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .principle {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-top: 2px solid var(--blue);
+        }
+
+        .principle h4 {
+            margin-top: 0;
+        }
+
+        .closing-statement {
+            font-size: 1.3rem;
+            color: var(--blue);
+            font-weight: 500;
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: rgba(48, 180, 230, 0.05);
+            border-left: 4px solid var(--blue);
+            border-radius: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            nav.sidebar {
+                width: 180px;
+                padding: 1.5rem 0.75rem;
+            }
+
+            main {
+                margin-left: 180px;
+            }
+
+            .section {
+                padding: 4rem 3rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero::before {
+                font-size: 5rem;
+                right: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 1rem;
+            }
+
+            main {
+                margin-left: 0;
+            }
+
+            .section {
+                min-height: auto;
+                padding: 3rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .principle-list {
+                grid-template-columns: 1fr;
+            }
+
+            .hero::before {
+                display: none;
+            }
+        }
+
+        /* Intersection Observer for scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .scroll-animate.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <h2>Contents</h2>
+        <ul>
+            <li><a href="#hero">Hero / Header</a></li>
+            <li><a href="#position">Where We Stand</a></li>
+            <li><a href="#opportunity">Market Opportunity</a></li>
+            <li><a href="#pricing-thesis">Pricing Thesis</a></li>
+            <li><a href="#short-term">Short-Term Strategy</a></li>
+            <li><a href="#long-term">Long-Term Marketplace</a></li>
+            <li><a href="#prize">Size of Prize</a></li>
+            <li><a href="#relationship">Select + brandhub</a></li>
+            <li><a href="#principles">Pricing Principles</a></li>
+            <li><a href="#36-months">36-Month Vision</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- 1. HERO / HEADER -->
+        <section id="hero" class="section hero">
+            <div class="hero-content">
+                <span class="badge">Internal — Confidential</span>
+                <h1>brandhub · Internal Strategy</h1>
+                <p class="subtitle">Pricing, data monetization, and the path to market leadership</p>
+                <p class="date-label">March 2026</p>
+
+                <div class="stats-bar">
+                    <div class="stat">
+                        <div class="stat-label">Total POS Market (2025)</div>
+                        <div class="stat-value">$16.1B</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Alc Bev POS Market</div>
+                        <div class="stat-value">$4.6B</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">2% Market Capture</div>
+                        <div class="stat-value">$92M</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Select NPS</div>
+                        <div class="stat-value">+50</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. WHERE WE STAND -->
+        <section id="position" class="section">
+            <h2>Where We Stand</h2>
+            <p class="section-intro">Current position and competitive context</p>
+
+            <div class="grid-2">
+                <div class="comparison-box">
+                    <div class="comparison-label">Select Design — Alc Bev Revenue</div>
+                    <div class="metric select-metric">$28.4M</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Current annual revenue at 0.62% market share</p>
+                </div>
+                <div class="comparison-box">
+                    <div class="comparison-label">Market Fragmentation</div>
+                    <div class="metric select-metric">High</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">No dominant platform; many small/mid vendors</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>The Key Insight:</strong> "The market leader in satisfaction has less than 1% share. That's not a ceiling — that's a starting line."</p>
+            </div>
+
+            <h3>Competitive Performance (Grant Thornton Study, Oct 2025)</h3>
+
+            <div class="grid-2">
+                <div class="comparison-box">
+                    <div class="comparison-label">Net Promoter Score (NPS)</div>
+                    <div class="metric select-metric">+50</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Select Design</p>
+                </div>
+                <div class="comparison-box">
+                    <div class="comparison-label">Competitor Average NPS</div>
+                    <div class="metric competitor-metric">-24</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Industry standard</p>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="comparison-box">
+                    <div class="comparison-label">Customer Satisfaction (CSAT)</div>
+                    <div class="metric select-metric">67%</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Select Design satisfaction rate</p>
+                </div>
+                <div class="comparison-box">
+                    <div class="comparison-label">Competitor Average CSAT</div>
+                    <div class="metric competitor-metric">42%</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Industry standard</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <p><strong>Critical Context:</strong> Competitors charge up to 19% of POS spend as platform tolling fees. Select Design has committed to rejecting this model entirely. The market is willing to pay for value, not for volume-based extraction.</p>
+            </div>
+
+            <p>The opportunity is clear: the market is fragmented and immature on technology adoption. Competitors have low satisfaction scores. Select has both the product advantage (NPS +50) and the positioning advantage (willingness to align pricing with client value, not client volume).</p>
+        </section>
+
+        <!-- 3. THE MARKET OPPORTUNITY -->
+        <section id="opportunity" class="section">
+            <h2>The Market Opportunity</h2>
+            <p class="section-intro">Data sourced from Grant Thornton Market Study, October 2025</p>
+
+            <h3>Market Structure & Growth</h3>
+
+            <div class="highlight-box">
+                <p><strong>US POS Display Market:</strong> $16.1B (2025) → $19.0B (2030), CAGR 3.4%</p>
+            </div>
+
+            <p>The POS display market is large and growing steadily, but the growth is not explosive. That actually works in our favor: it means the market will be won by the vendor with the best product and customer relationship, not by whoever spends the most on customer acquisition.</p>
+
+            <h3>Alcohol & Beverage Segment (Our Primary Focus)</h3>
+
+            <div class="comparison-box">
+                <div class="comparison-label">Total Alc Bev POS Market</div>
+                <div class="metric select-metric">$4.6B</div>
+                <p style="font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem;">15% of total alcohol marketing spend goes to point-of-sale materials</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <div class="comparison-label">Beer</div>
+                        <div class="metric" style="color: var(--blue); font-size: 1.3rem;">$1.7B</div>
+                    </div>
+                    <div>
+                        <div class="comparison-label">Spirits</div>
+                        <div class="metric" style="color: var(--blue); font-size: 1.3rem;">$1.0B</div>
+                    </div>
+                    <div>
+                        <div class="comparison-label">Wine</div>
+                        <div class="metric" style="color: var(--blue); font-size: 1.3rem;">$1.0B</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Market Dynamics</h3>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>
+                    <strong>Fragmented vendor base:</strong> Many small and mid-sized POS vendors, no single dominant platform. This is a "catch it while it's forming" moment.
+                </div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>
+                    <strong>Technology adoption is immature:</strong> Clients haven't consolidated to a single platform yet. They're comparing options. The next 18 months will determine market structure for a decade.
+                </div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>
+                    <strong>Satisfaction is low:</strong> Competitor average NPS is -24. We're at +50. This is the widest competitive moat available.
+                </div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>
+                    <strong>Pricing power exists:</strong> Competitors charge up to 19% of POS spend. There's clearly value. The question is whether we capture it ethically and sustainably.
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3>The Funnel (Simplified)</h3>
+            <p>From the GT Study: Alcohol & beverage is a $1.79T category (retail + on-premise). Of that, ~$120.6B goes to marketing. Of that, ~$16.1B goes to POS display (which includes beer, spirits, wine, and broader retail). Our initial focus is the $4.6B alc bev subset.</p>
+
+            <div class="highlight-box">
+                <p>The bottleneck is not demand for POS solutions. The bottleneck is clients' willingness to move from incumbent vendors. We move them by being better and cheaper, and by building a network they can't ignore.</p>
+            </div>
+        </section>
+
+        <!-- 4. WHY TRADITIONAL SAAS PRICING DOESN'T FIT -->
+        <section id="pricing-thesis" class="section">
+            <h2>Why Traditional SaaS Pricing Doesn't Fit</h2>
+            <p class="section-intro">The philosophical and strategic reasons we reject per-spend models</p>
+
+            <h3>The Core Problem</h3>
+
+            <p>Traditional SaaS pricing models — per-user, per-seat, per-data-unit — are based on a simple assumption: as the customer gets more value from the product, they use more of it, so they should pay more.</p>
+
+            <p>But brandhub inverts this. <strong>We save clients money.</strong> Charging them more when they spend more is a philosophical contradiction. It's also a perverse incentive.</p>
+
+            <div class="warning-box">
+                <p><strong>The Trap We Won't Fall Into:</strong> Competitors charge 15–19% of POS spend as platform tolling fees. This creates an incentive for the platform to maximize client spending, not minimize waste. It's a conflict of interest baked into the pricing model. We reject this entirely.</p>
+            </div>
+
+            <h3>What Drives Actual Value</h3>
+
+            <div class="list-item">
+                <span class="list-bullet">✓</span>
+                <div><strong>Intelligence:</strong> Better data means better decisions. The client benefits from insights we provide, regardless of whether they spend $100K or $1M through the platform.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">✓</span>
+                <div><strong>Efficiency:</strong> The platform's workflow and integration cuts client time waste. This saves money. The benefit is real even if they never increase spend.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">✓</span>
+                <div><strong>Network access:</strong> Buyers have access to a curated, pre-vetted vendor network. That saves search time and reduces decision risk. It's valuable at any spend level.</div>
+            </div>
+
+            <h3>Why "Users," "Items," and "Programs" Aren't Good Proxies</h3>
+
+            <div class="comparison-box">
+                <div class="comparison-label">Per-User Pricing</div>
+                <p style="margin-bottom: 0;">A client adds one additional user to the platform. The platform doesn't get more valuable; the user gets more value from accessing the same data set. This is asymmetric. The client shouldn't pay more for a feature that benefits only them.</p>
+            </div>
+
+            <div class="comparison-box">
+                <div class="comparison-label">Per-Item Pricing</div>
+                <p style="margin-bottom: 0;">A client adds 1,000 more POS items to the platform. The platform becomes more valuable for everyone (more inventory, more data, more opportunities for insights). The client that added the items benefits but so does everyone else. They shouldn't be taxed for contributing value.</p>
+            </div>
+
+            <div class="comparison-box">
+                <div class="comparison-label">Per-Program Pricing</div>
+                <p style="margin-bottom: 0;">A client runs two marketing programs instead of one. The platform cost shouldn't scale with marketing volume. That's arbitrary.</p>
+            </div>
+
+            <h3>Our Pricing Principle</h3>
+
+            <div class="highlight-box">
+                <p><strong>"We charge for access to the platform and the intelligence it provides. Not for how much you spend through it."</strong></p>
+            </div>
+
+            <p>Flat annual fee. All-inclusive. No hidden scaling. One price, one conversation, one contract.</p>
+        </section>
+
+        <!-- 5. SHORT-TERM STRATEGY -->
+        <section id="short-term" class="section">
+            <h2>Short-Term Strategy: Land the Right Names</h2>
+            <p class="section-intro">2026 focus: Build proof points with anchor clients</p>
+
+            <h3>The Goal</h3>
+
+            <div class="highlight-box">
+                <p><strong>Sign 3–5 anchor clients in alcohol & beverage in 2026.</strong> Focus on names that have existing relationships with Select, that can show ROI quickly, and that will provide reference-ability and network effects.</p>
+            </div>
+
+            <h3>Priority #1: Heaven Hill</h3>
+
+            <p>Heaven Hill is the anchor. Here's why:</p>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div><strong>Existing SRS relationship:</strong> Select already works with Heaven Hill on the Select production side. We have a clean baseline. We know their business, their pain points, their workflow.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div><strong>Provable ROI before signature:</strong> We can demonstrate impact on their existing Select relationship before they sign a brandhub contract. That's a massive de-risking factor.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div><strong>Reference power:</strong> Heaven Hill is a household name in spirits. Once they're on brandhub, every other major brand wants to know why they switched and what they're seeing.</div>
+            </div>
+
+            <h3>Pricing Approach for Anchor Clients</h3>
+
+            <h4>Structure: Flat Annual All-In Fee</h4>
+
+            <p>No per-user scaling. No per-item scaling. No per-program scaling. One number.</p>
+
+            <div class="comparison-box">
+                <div class="comparison-label">Suggested Annual Fee Range</div>
+                <div class="metric select-metric">$36K–$48K</div>
+                <p style="font-size: 0.875rem; color: var(--muted);">All-inclusive, multi-year lock at founding client rate</p>
+            </div>
+
+            <h4>Founding Client Benefits</h4>
+
+            <div class="list-item">
+                <span class="list-bullet">1.</span>
+                <div><strong>Price certainty (3-year lock):</strong> They lock in the founding client rate for three years, regardless of market changes or feature additions. This is a powerful incentive to move early.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">2.</span>
+                <div><strong>Roadmap input:</strong> Founding clients get direct voice in the brandhub product roadmap. They're not just users; they're partners in shaping what the platform becomes.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">3.</span>
+                <div><strong>First access to new features:</strong> Founding clients get new features before general release. They benefit from being early adopters.</div>
+            </div>
+
+            <h4>Select Production Credit</h4>
+
+            <p>This is critical. It needs to be transparent and disclosed, not hidden.</p>
+
+            <div class="comparison-box">
+                <div class="comparison-label">At $400K+ annual Select spend</div>
+                <div class="metric" style="color: var(--success);">$12K credit</div>
+            </div>
+
+            <div class="comparison-box">
+                <div class="comparison-label">At $800K+ annual Select spend</div>
+                <div class="metric" style="color: var(--success);">$24K credit</div>
+            </div>
+
+            <p>What this means: if Heaven Hill spends $500K/year with Select on production, they receive a $12K credit toward their brandhub fee. If they do $900K, they get $24K. This formalizes Select's advantage in the marketplace and makes it explicit to the client, not buried.</p>
+
+            <div class="highlight-box">
+                <p><strong>Why this is good business:</strong> It acknowledges that Select and brandhub have a real competitive advantage (integration, visibility, customization). But instead of hiding it, we make it a client benefit. Transparency builds trust.</p>
+            </div>
+
+            <h3>Success Metrics for 2026</h3>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>3–5 anchor clients signed (Heaven Hill, 2–4 others)</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>Reference calls available to prospects</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>Data and transaction history building (foundation for long-term pricing intelligence)</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>NPS maintained at +45 or higher among clients</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>Vendor network engagement (preparation for long-term model)</div>
+            </div>
+        </section>
+
+        <!-- 6. LONG-TERM: MARKETPLACE MODEL -->
+        <section id="long-term" class="section">
+            <h2>Long-Term: The Marketplace Model</h2>
+            <p class="section-intro">What we don't share with clients yet — the monetization architecture</p>
+
+            <h3>What brandhub Actually Is</h3>
+
+            <p>brandhub is not just a procurement tool. It's the pipe through which business flows between brands and suppliers. That makes it a <strong>two-sided marketplace</strong>, and two-sided marketplaces have fundamentally different monetization logic than simple SaaS platforms.</p>
+
+            <div class="highlight-box">
+                <p>The value isn't in the software interface. The value is in the business that flows through it. The platform only gets better as more participants join. That network effect is the moat.</p>
+            </div>
+
+            <h3>Brand Side: Flat Annual Fee</h3>
+
+            <p>Brands pay one flat annual fee for access to the platform, the vendor network, and the intelligence we provide.</p>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div><strong>Not tied to spend:</strong> $500K or $5M in annual POS spending through Select, brandhub, or others. Same fee.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div><strong>Predictable:</strong> One price, one year, one contract. Easy to renew.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div><strong>Scales simply:</strong> As we add brands, the cost to serve an additional brand is incremental. Margin improves without touching pricing.</div>
+            </div>
+
+            <h3>Vendor Side: Participation Fees</h3>
+
+            <p>Vendors (like Select, but also Branded Collateral, AMPAC, and others) pay for access to qualified demand on the platform. The model has several components:</p>
+
+            <h4>1. Listing / Presence Fee (Small Annual)</h4>
+            <p>Vendor gets presence in the brandhub network, ability to see and respond to RFQs from brands on the platform.</p>
+
+            <h4>2. Per-RFQ Participation Fee OR Revenue Share</h4>
+            <p>Two models, vendor chooses:</p>
+            <div style="margin-left: 2rem; margin-top: 1rem; margin-bottom: 1rem;">
+                <p><strong>Option A (Transaction-based):</strong> Vendor pays 1–2% of value on each RFQ they win and book through brandhub.</p>
+                <p><strong>Option B (Participation-based):</strong> Vendor pays per RFQ they bid on, or pays a monthly participation tier fee.</p>
+            </div>
+
+            <h4>3. Critical Carve-Out: Existing Vendor Relationships</h4>
+
+            <div class="warning-box">
+                <p><strong>Important:</strong> Any vendors a brand brings with them to brandhub are NOT charged. They can participate at zero cost. Only net-new vendor relationships facilitated by brandhub pay the participation fee.</p>
+            </div>
+
+            <p>Why? Because this removes a friction point. Brands worry about bringing their existing vendors onto a new platform if those vendors have to pay a toll. By exempting existing relationships, we remove that concern and make adoption easy. The network fee applies only to incremental opportunity on the platform.</p>
+
+            <p>This is standard B2B marketplace practice. Faire does it. Angi does it. It works.</p>
+
+            <h3>The Flywheel Effect</h3>
+
+            <div style="background-color: rgba(155, 111, 232, 0.1); border: 1px solid rgba(155, 111, 232, 0.3); padding: 2rem; border-radius: 4px; margin: 2rem 0;">
+                <p style="margin-bottom: 1rem;"><strong>More brands join</strong></p>
+                <p style="margin-bottom: 1rem; margin-left: 2rem; color: var(--muted);">↓</p>
+                <p style="margin-bottom: 1rem;"><strong>More RFQ volume on the platform</strong></p>
+                <p style="margin-bottom: 1rem; margin-left: 2rem; color: var(--muted);">↓</p>
+                <p style="margin-bottom: 1rem;"><strong>Platform becomes more valuable to vendors</strong></p>
+                <p style="margin-bottom: 1rem; margin-left: 2rem; color: var(--muted);">↓</p>
+                <p style="margin-bottom: 1rem;"><strong>More vendors join, willing to pay for access</strong></p>
+                <p style="margin-bottom: 1rem; margin-left: 2rem; color: var(--muted);">↓</p>
+                <p style="margin-bottom: 1rem;"><strong>Vendor fee revenue subsidizes lower brand fees</strong></p>
+                <p style="margin-bottom: 1rem; margin-left: 2rem; color: var(--muted);">↓</p>
+                <p><strong>Easier to sign brands, which accelerates the cycle</strong></p>
+            </div>
+
+            <p>This is a defensible network effect. The longer we're in market, the harder we are to displace, not the other way around.</p>
+
+            <h3>Why We Don't Lead With This</h3>
+
+            <p>We don't tell brands about the vendor participation fees in year one. Here's why:</p>
+
+            <div class="list-item">
+                <span class="list-bullet">1.</span>
+                <div>It complicates the conversation. The first sale is about simplicity: "One fee, all-in, you get the platform and the network."</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">2.</span>
+                <div>The vendor model doesn't generate meaningful revenue until we have volume (50+ vendors + strong RFQ flow). Right now, it's infrastructure building.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">3.</span>
+                <div>We want brands thinking about their own benefit, not about how the platform is monetizing vendors. That comes later, after trust is built.</div>
+            </div>
+
+            <p>But internally, we're building toward this. The vendor network is the long-term moat.</p>
+        </section>
+
+        <!-- 7. SIZE OF PRIZE -->
+        <section id="prize" class="section">
+            <h2>Size of Prize</h2>
+            <p class="section-intro">Revenue scenarios: alcohol & beverage focus, then full market</p>
+
+            <h3>Scenario 1: Alcohol & Beverage Focus (Near Term)</h3>
+
+            <table class="scenario-table">
+                <thead>
+                    <tr>
+                        <th>Market Share Assumption</th>
+                        <th>Base (Alc Bev POS)</th>
+                        <th>Brand Platform Fee</th>
+                        <th>Vendor Network (1% of RFQ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>0.5% share</strong></td>
+                        <td><span class="value-highlight">$23M</span> POS accessible</td>
+                        <td><span class="value-accent">~$85K–120K ARR</span> (2–3 clients)</td>
+                        <td><span class="value-accent">~$15–30K</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>1% share</strong></td>
+                        <td><span class="value-highlight">$46M</span> POS accessible</td>
+                        <td><span class="value-accent">~$170K–240K ARR</span> (4–5 clients)</td>
+                        <td><span class="value-accent">~$40–80K</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2% share</strong></td>
+                        <td><span class="value-highlight">$92M</span> POS accessible</td>
+                        <td><span class="value-accent">~$350K–500K ARR</span> (8–10 clients)</td>
+                        <td><span class="value-accent">~$100–250K</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>5% share</strong></td>
+                        <td><span class="value-highlight">$230M</span> POS accessible</td>
+                        <td><span class="value-accent">~$900K–1.2M ARR</span> (20–25 clients)</td>
+                        <td><span class="value-accent">~$400K–900K</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="footnote"><strong>Context:</strong> Select's current alc bev revenue is $28.4M at 0.62% market share. Moving to 2% share would be 3x revenue just on production—and this brandhub platform fee is additive on top of that.</p>
+
+            <h3>Scenario 2: Full POS Market (Long Term, Post-2027)</h3>
+
+            <table class="scenario-table">
+                <thead>
+                    <tr>
+                        <th>Market View</th>
+                        <th>2025 Base</th>
+                        <th>2030 Projected</th>
+                        <th>CAGR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Total POS Market</strong></td>
+                        <td><span class="value-highlight">$16.1B</span></td>
+                        <td><span class="value-highlight">$19.0B</span></td>
+                        <td>3.4%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>At 2% platform share</strong></td>
+                        <td colspan="2"><span class="value-highlight">$322M</span> total addressable platform revenue</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vendor network (1% of RFQ on 2%)</strong></td>
+                        <td colspan="2"><span class="value-accent">~$3.2M</span> additional annually</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="footnote"><strong>Note:</strong> This is long-term. The immediate focus is alcohol & beverage (0.62% share → 2% share = 3x growth). Retail (floral, gift, home) comes after we prove the model.</p>
+
+            <h3>Key Insight</h3>
+
+            <div class="highlight-box">
+                <p>Select's current revenue is $28.4M in alc bev. The path to 2% share in alc bev alone represents 3x+ revenue growth just on production. Platform fees and vendor network revenue are entirely additive. We're not choosing between production revenue and platform revenue. We're building both.</p>
+            </div>
+        </section>
+
+        <!-- 8. SELECT + brandhub RELATIONSHIP -->
+        <section id="relationship" class="section">
+            <h2>The Select + brandhub Relationship</h2>
+            <p class="section-intro">Be transparent, not defensive, about the competitive dynamics</p>
+
+            <h3>The Reality</h3>
+
+            <p>Select built brandhub. Select is one vendor in the network. Select competes for business like every other vendor—but Select has real, disclosed advantages that deserve acknowledgment.</p>
+
+            <div class="highlight-box">
+                <p>The secret to sustainable marketplace monetization is honesty about conflicts of interest, not hiding them.</p>
+            </div>
+
+            <h3>Select's Competitive Advantages in brandhub</h3>
+
+            <div class="list-item">
+                <span class="list-bullet">1.</span>
+                <div><strong>Speed:</strong> Select's systems are integrated into brandhub's core. Turnaround time on RFQs is faster.</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">2.</span>
+                <div><strong>Integration:</strong> Brands get visibility into Select's production pipeline directly from brandhub. That's valuable and not available to competitors (yet).</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">3.</span>
+                <div><strong>Industry expertise:</strong> Select's team has 20+ years in alcohol marketing. We understand the nuances. That's earned, not given.</div>
+            </div>
+
+            <h3>How We Formalize This Without Hiding It</h3>
+
+            <h4>The Production Credit Model (Disclosed)</h4>
+
+            <p>At $400K+ annual Select spend, brands receive a $12K credit toward brandhub fees. At $800K+, they receive $24K. This is transparent. It's on the contract. It's the client benefit for using Select.</p>
+
+            <div class="comparison-box">
+                <div class="comparison-label">What This Does</div>
+                <p style="margin-bottom: 0;">It acknowledges Select's advantage explicitly, translates that advantage into a price benefit for the client (not a hidden profit margin for Select), and makes the economics clear to both parties. No backdoor deals. No confusion.</p>
+            </div>
+
+            <h3>What the GT Study Found</h3>
+
+            <p>"Select Design's ability to combine industry and brand expertise with a highly customizable platform is a key differentiator in the market."</p>
+
+            <p>This is our moat. It's not just about having better software. It's about having people who understand the business, combined with flexible technology. Don't hide that. Lead with it.</p>
+
+            <h3>The Conversation With Brands</h3>
+
+            <p>Here's how we address it directly:</p>
+
+            <blockquote style="font-style: italic; color: var(--muted); margin: 2rem 0; padding-left: 1rem; border-left: 2px solid var(--border);">
+                "We built brandhub. We're also a vendor on it. Yes, we have advantages—speed, integration, and industry knowledge. We don't hide that. Instead, we make it a client benefit through the production credit. Your spend with us directly reduces your brandhub fee. That keeps us honest: we succeed when you succeed, not when we extract rent from the platform."
+            </blockquote>
+
+            <p>Brands respect transparency. They know marketplaces have conflicts. They prefer vendors who acknowledge it and design systems to manage it, rather than vendors who pretend it doesn't exist.</p>
+        </section>
+
+        <!-- 9. PRICING PRINCIPLES -->
+        <section id="principles" class="section">
+            <h2>Pricing Principles (The Rules We Won't Break)</h2>
+            <p class="section-intro">These are non-negotiable. They define our integrity in the market.</p>
+
+            <div class="principle-list">
+                <div class="principle">
+                    <h4>No % of Spend</h4>
+                    <p>We don't profit from your waste. If you spend $100K or $1M through the platform, your fee is the same. We're incentivized to help you spend smarter, not more.</p>
+                </div>
+
+                <div class="principle">
+                    <h4>No Per-Seat Scaling</h4>
+                    <p>More users on brandhub means more value for you. They shouldn't cost you more. Usage isn't a cost driver; it's a benefit indicator.</p>
+                </div>
+
+                <div class="principle">
+                    <h4>No Per-Item Fees</h4>
+                    <p>Adding SKUs to the platform makes it better for everyone. The client contributes to the network. They shouldn't be taxed for participation.</p>
+                </div>
+
+                <div class="principle">
+                    <h4>No Per-Program Costs</h4>
+                    <p>Running two marketing programs instead of one shouldn't double your platform fee. The platform supports unlimited programs for one price.</p>
+                </div>
+
+                <div class="principle">
+                    <h4>Vendor Network Fees Disclosed</h4>
+                    <p>If we charge vendors for participation, brands know about it. No hidden economics. Transparency builds trust and prevents future friction.</p>
+                </div>
+
+                <div class="principle">
+                    <h4>Founding Client Rates Locked</h4>
+                    <p>Sign in 2026 at $42K/year? You stay at $42K for three years. No surprise escalations. Price certainty is part of the value prop.</p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3>Why These Principles Matter</h3>
+
+            <div class="callout">
+                <div class="callout-icon">💡</div>
+                <div class="callout-content">
+                    <p><strong>These principles define us.</strong> They separate us from competitors who charge 15–19% of POS spend and have incentives to maximize volume, not minimize waste.</p>
+                    <p>In a fragmented market with low satisfaction, pricing integrity is a competitive advantage. Brands remember which vendors they can trust.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. 36-MONTH VISION -->
+        <section id="36-months" class="section">
+            <h2>What Good Looks Like in 36 Months</h2>
+            <p class="section-intro">The endpoint we're building toward (March 2029)</p>
+
+            <h3>Client Portfolio</h3>
+
+            <div class="comparison-box">
+                <div class="comparison-label">Anchor Clients Signed</div>
+                <div class="metric select-metric">5–8</div>
+                <p style="font-size: 0.875rem; color: var(--muted);">Established, referenceable alcohol & beverage brands</p>
+            </div>
+
+            <h3>Vendor Network</h3>
+
+            <div class="comparison-box">
+                <div class="comparison-label">Active Suppliers on Platform</div>
+                <div class="metric select-metric">50+</div>
+                <p style="font-size: 0.875rem; color: var(--muted);">Select plus competitive alternatives</p>
+            </div>
+
+            <h3>Revenue</h3>
+
+            <div class="grid-2">
+                <div class="comparison-box">
+                    <div class="comparison-label">Platform Fee Revenue (ARR)</div>
+                    <div class="metric select-metric">$240–400K</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">At 5–8 clients × ~$48–50K</p>
+                </div>
+                <div class="comparison-box">
+                    <div class="comparison-label">Vendor Network Revenue (ARR)</div>
+                    <div class="metric select-metric">$75–150K</div>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Beginning to scale as RFQ volume grows</p>
+                </div>
+            </div>
+
+            <h3>Select Production Growth</h3>
+
+            <p>Select's share of business booked through brandhub is growing. Not because of hidden incentives, but because of speed, integration, and reputation. Production revenue is expanding as the platform brings more brands into the network.</p>
+
+            <h3>Data Asset</h3>
+
+            <div class="highlight-box">
+                <p><strong>2+ years of transaction history</strong> across multiple brands and markets. This becomes the pricing intelligence moat. We can see trends, benchmarks, and inefficiencies that competitors can't.</p>
+            </div>
+
+            <h3>Health Metrics</h3>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>NPS maintained at +45 or higher (still in top 10% of SaaS)</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>Client retention above 85% (3-year contracts renew at 90%+)</div>
+            </div>
+
+            <div class="list-item">
+                <span class="list-bullet">→</span>
+                <div>Referral engine: 60% of new clients sourced from existing client recommendations</div>
+            </div>
+
+            <h3>Positioning</h3>
+
+            <p>brandhub is recognized as the gold standard for alcohol and beverage point-of-sale marketing management. Clients and vendors choose it not because they have to, but because it's clearly better and more honest than alternatives.</p>
+
+            <div class="closing-statement">
+                <p>That's the goal. Not to be the fastest-growing POS platform. To be the most trusted.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <section style="background-color: var(--surface); padding: 4rem; border-top: 1px solid var(--border); text-align: center;">
+            <h3 style="margin-bottom: 1rem;">Data Sources</h3>
+            <p style="color: var(--muted); font-size: 0.875rem;">
+                Grant Thornton Market Study, October 2025<br>
+                Select Design internal financial and operational data<br>
+                <br>
+                <strong>Classification: INTERNAL — CONFIDENTIAL</strong><br>
+                Do not share with external parties, clients, or prospects without explicit authorization.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        // Smooth scroll navigation
+        document.querySelectorAll('nav.sidebar a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    updateActiveNav();
+                }
+            });
+        });
+
+        // Update active nav on scroll
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('nav.sidebar a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav();
+
+        // Fade-in animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>

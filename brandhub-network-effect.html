@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>brandhub — Network Effect</title>
+<style>
+  :root {
+    --bg:     #090C1C;
+    --surface:#0E1225;
+    --blue:   #30B4E6;
+    --orange: #FF9119;
+    --purple: #9B6FE8;
+    --teal:   #00C896;
+    --amber:  #F0B429;
+    --green:  #2ECC71;
+    --text:   #EEF2F8;
+    --muted:  #8898B5;
+    --border: rgba(136,152,181,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+  header h1 span { color: var(--blue); }
+  .badge {
+    background: rgba(255,145,25,0.12);
+    color: var(--orange);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 4px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .page { padding: 40px 48px 60px; max-width: 1300px; margin: 0 auto; }
+
+  /* ── DIAGRAM ── */
+  .diagram-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 56px;
+  }
+  .diagram-wrap svg { display: block; width: 100%; height: auto; }
+
+  /* Node styles */
+  .node-group { cursor: default; }
+  .node-bg {
+    fill: var(--surface);
+    stroke-width: 1.5;
+    rx: 14;
+    filter: drop-shadow(0 4px 24px rgba(0,0,0,0.5));
+  }
+  .node-label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    fill: var(--text);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  .node-sub {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    fill: var(--muted);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  .node-icon {
+    font-size: 22px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  /* Hub node */
+  .hub-bg {
+    fill: #0d1630;
+    stroke: var(--blue);
+    stroke-width: 2;
+    rx: 20;
+    filter: drop-shadow(0 0 32px rgba(48,180,230,0.25));
+  }
+  .hub-label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    fill: var(--blue);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    letter-spacing: -0.5px;
+  }
+  .hub-sub {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    fill: var(--muted);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  /* Flow paths */
+  .flow-money { fill: none; stroke-width: 2; stroke-dasharray: 8 5; }
+  .flow-value  { fill: none; stroke-width: 1.5; stroke-dasharray: 4 6; opacity: 0.5; }
+
+  /* Animated dashes */
+  .anim-flow { animation: dashMove 2s linear infinite; }
+  .anim-flow-slow { animation: dashMove 3.5s linear infinite; }
+  .anim-flow-reverse { animation: dashReverse 2.5s linear infinite; }
+
+  @keyframes dashMove    { to { stroke-dashoffset: -26; } }
+  @keyframes dashReverse { to { stroke-dashoffset:  26; } }
+
+  /* Flow labels */
+  .flow-label-box {
+    fill: var(--surface);
+    rx: 6;
+    stroke-width: 1;
+  }
+  .flow-label-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  .flow-label-sub {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 10px;
+    fill: var(--muted);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  /* ── FLYWHEEL SECTION ── */
+  .flywheel-section {
+    margin-bottom: 48px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .flywheel-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .flywheel-step {
+    padding: 24px 22px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .flywheel-step:last-child { border-right: none; }
+  .flywheel-step::after {
+    content: '→';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+    z-index: 2;
+  }
+  .flywheel-step:last-child::after { display: none; }
+  .step-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .step-headline {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .step-body {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── REVENUE SUMMARY PILLS ── */
+  .revenue-summary {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+  .rev-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    border-top-width: 3px;
+  }
+  .rev-pill-num  { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; }
+  .rev-pill-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .rev-pill-from { font-size: 11px; color: var(--muted); }
+
+  /* ── WHO BENEFITS TABLE ── */
+  .who-benefits {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .wb-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .wb-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .wb-row:last-child { border-bottom: none; }
+  .wb-cell {
+    padding: 16px 20px;
+    border-right: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .wb-cell:last-child { border-right: none; }
+  .wb-cell.header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .wb-cell.participant { font-weight: 700; font-size: 14px; }
+  .wb-cell.value { color: var(--muted); line-height: 1.5; }
+  .wb-cell.pays  { color: var(--orange); font-size: 12px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>brandhub</span> — Network Effect</h1>
+  <div class="badge">Internal Confidential</div>
+</header>
+
+<div class="page">
+
+  <!-- ── REVENUE STREAM PILLS ── -->
+  <p class="section-title" style="margin-bottom:16px;">5 Revenue Streams</p>
+  <div class="revenue-summary" style="margin-bottom:48px;">
+    <div class="rev-pill" style="border-top-color: var(--blue);">
+      <div class="rev-pill-num">Stream 1</div>
+      <div class="rev-pill-name" style="color:var(--blue);">Platform Fee</div>
+      <div class="rev-pill-from">Brands pay $48K/yr flat</div>
+    </div>
+    <div class="rev-pill" style="border-top-color: var(--orange);">
+      <div class="rev-pill-num">Stream 2</div>
+      <div class="rev-pill-name" style="color:var(--orange);">Managed Service</div>
+      <div class="rev-pill-from">5% print · 10–15% non-print (3rd-party only)</div>
+    </div>
+    <div class="rev-pill" style="border-top-color: var(--amber);">
+      <div class="rev-pill-num">Stream 3</div>
+      <div class="rev-pill-name" style="color:var(--amber);">Vendor Network Fee</div>
+      <div class="rev-pill-from">2% of 3rd-party non-print spend through platform</div>
+    </div>
+    <div class="rev-pill" style="border-top-color: var(--purple);">
+      <div class="rev-pill-num">Stream 4</div>
+      <div class="rev-pill-name" style="color:var(--purple);">Production Margin</div>
+      <div class="rev-pill-from">~28% margin on Select-produced categories</div>
+    </div>
+    <div class="rev-pill" style="border-top-color: var(--teal);">
+      <div class="rev-pill-num">Stream 5</div>
+      <div class="rev-pill-name" style="color:var(--teal);">Distributor Network</div>
+      <div class="rev-pill-from">Commitment pool · Pooled savings · The spread</div>
+    </div>
+  </div>
+
+  <!-- ── NETWORK DIAGRAM ── -->
+  <p class="section-title">The Platform Network</p>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Arrow markers -->
+        <marker id="arr-blue"   markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#30B4E6"/></marker>
+        <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FF9119"/></marker>
+        <marker id="arr-amber"  markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#F0B429"/></marker>
+        <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#9B6FE8"/></marker>
+        <marker id="arr-teal"   markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00C896"/></marker>
+        <marker id="arr-muted"  markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8898B5"/></marker>
+        <!-- Glows -->
+        <filter id="glow-blue"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-hub"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+
+      <!-- ════ FLOW PATHS ════ -->
+
+      <!-- BRANDS → brandhub: Platform fee (blue solid) -->
+      <path class="flow-money anim-flow" d="M 220,160 Q 380,155 440,245"
+        stroke="#30B4E6" marker-end="url(#arr-blue)"/>
+
+      <!-- BRANDS → brandhub: Managed service (orange dashed) -->
+      <path class="flow-money anim-flow" d="M 230,185 Q 370,180 438,258"
+        stroke="#FF9119" marker-end="url(#arr-orange)" stroke-dasharray="6 4"/>
+
+      <!-- brandhub → BRANDS: value (muted, reverse) -->
+      <path class="flow-value anim-flow-reverse" d="M 438,238 Q 360,150 218,155"
+        stroke="#8898B5" marker-end="url(#arr-muted)"/>
+
+      <!-- VENDORS → brandhub: 2% vendor fee (amber) -->
+      <path class="flow-money anim-flow" d="M 780,155 Q 640,150 562,243"
+        stroke="#F0B429" marker-end="url(#arr-amber)"/>
+
+      <!-- brandhub → VENDORS: access to brands (muted, reverse) -->
+      <path class="flow-value anim-flow-reverse" d="M 562,238 Q 640,140 778,142"
+        stroke="#8898B5" marker-end="url(#arr-muted)"/>
+
+      <!-- SELECT → brandhub: production relationship (purple) -->
+      <path class="flow-money anim-flow-slow" d="M 175,420 Q 300,390 445,335"
+        stroke="#9B6FE8" marker-end="url(#arr-purple)"/>
+
+      <!-- brandhub → SELECT: production flow (muted reverse) -->
+      <path class="flow-value anim-flow-reverse" d="M 442,348 Q 295,400 172,432"
+        stroke="#8898B5" marker-end="url(#arr-muted)"/>
+
+      <!-- DISTRIBUTORS → brandhub: commitment + spread (teal) -->
+      <path class="flow-money anim-flow-slow" d="M 780,420 Q 680,385 562,338"
+        stroke="#00C896" marker-end="url(#arr-teal)"/>
+
+      <!-- brandhub → DISTRIBUTORS: program mgmt (muted reverse) -->
+      <path class="flow-value anim-flow-reverse" d="M 565,348 Q 685,395 778,432"
+        stroke="#8898B5" marker-end="url(#arr-muted)"/>
+
+      <!-- ════ HUB NODE ════ -->
+      <g class="node-group" filter="url(#glow-hub)">
+        <rect class="hub-bg" x="390" y="222" width="220" height="136" rx="20"/>
+        <text class="hub-label" x="500" y="268">brandhub</text>
+        <text class="hub-sub" x="500" y="288">POS Management Platform</text>
+        <text class="hub-sub" x="500" y="305" style="fill:#30B4E6; font-size:10px; font-weight:600; letter-spacing:0.5px;">ALL SPEND FLOWS THROUGH</text>
+        <text class="hub-sub" x="500" y="322">5 revenue streams</text>
+      </g>
+
+      <!-- ════ BRAND CLIENTS NODE ════ -->
+      <g class="node-group">
+        <rect class="node-bg" x="60" y="110" width="180" height="110" rx="14" stroke="#30B4E6"/>
+        <text class="node-icon" x="150" y="143">🏢</text>
+        <text class="node-label" x="150" y="168" style="fill:#30B4E6;">Brand Clients</text>
+        <text class="node-sub" x="150" y="185">Alc Bev Brands</text>
+        <text class="node-sub" x="150" y="200">$2M avg POS spend</text>
+      </g>
+
+      <!-- ════ VENDOR NETWORK NODE ════ -->
+      <g class="node-group">
+        <rect class="node-bg" x="760" y="110" width="180" height="110" rx="14" stroke="#F0B429"/>
+        <text class="node-icon" x="850" y="143">🏭</text>
+        <text class="node-label" x="850" y="168" style="fill:#F0B429;">Vendor Network</text>
+        <text class="node-sub" x="850" y="185">Non-Select producers</text>
+        <text class="node-sub" x="850" y="200">Pay 2% of platform spend</text>
+      </g>
+
+      <!-- ════ SELECT DESIGN NODE ════ -->
+      <g class="node-group">
+        <rect class="node-bg" x="40" y="380" width="190" height="110" rx="14" stroke="#9B6FE8"/>
+        <text class="node-icon" x="135" y="413">⚙️</text>
+        <text class="node-label" x="135" y="438" style="fill:#9B6FE8;">Select Design</text>
+        <text class="node-sub" x="135" y="455">Print · Displays · Wearables</text>
+        <text class="node-sub" x="135" y="470">~28% production margin</text>
+      </g>
+
+      <!-- ════ DISTRIBUTORS NODE ════ -->
+      <g class="node-group">
+        <rect class="node-bg" x="760" y="380" width="200" height="110" rx="14" stroke="#00C896"/>
+        <text class="node-icon" x="860" y="413">🚚</text>
+        <text class="node-label" x="860" y="438" style="fill:#00C896;">Distributors</text>
+        <text class="node-sub" x="860" y="455">SGWS model</text>
+        <text class="node-sub" x="860" y="470">$25K/brand/state commitment</text>
+      </g>
+
+      <!-- ════ FLOW LABELS ════ -->
+
+      <!-- Platform fee label -->
+      <g transform="translate(295,152)">
+        <rect class="flow-label-box" x="-46" y="-12" width="92" height="22" stroke="#30B4E6" fill="#0E1225"/>
+        <text class="flow-label-text" x="0" y="2" fill="#30B4E6">$48K platform fee</text>
+      </g>
+
+      <!-- Managed service label -->
+      <g transform="translate(305,195)">
+        <rect class="flow-label-box" x="-50" y="-11" width="100" height="20" stroke="#FF9119" fill="#0E1225"/>
+        <text class="flow-label-text" x="0" y="1" fill="#FF9119">Managed service fee</text>
+      </g>
+
+      <!-- Value back to brands -->
+      <g transform="translate(340,125)">
+        <rect class="flow-label-box" x="-50" y="-10" width="100" height="18" stroke="rgba(136,152,181,0.3)" fill="#090C1C"/>
+        <text class="flow-label-text" x="0" y="1" fill="#8898B5" style="font-weight:500;">ordering · visibility · control</text>
+      </g>
+
+      <!-- Vendor fee label -->
+      <g transform="translate(696,148)">
+        <rect class="flow-label-box" x="-48" y="-11" width="96" height="20" stroke="#F0B429" fill="#0E1225"/>
+        <text class="flow-label-text" x="0" y="1" fill="#F0B429">2% of spend flow</text>
+      </g>
+
+      <!-- Value back to vendors -->
+      <g transform="translate(700,118)">
+        <rect class="flow-label-box" x="-44" y="-10" width="88" height="18" stroke="rgba(136,152,181,0.3)" fill="#090C1C"/>
+        <text class="flow-label-text" x="0" y="1" fill="#8898B5" style="font-weight:500;">brand buyer access</text>
+      </g>
+
+      <!-- Production margin label -->
+      <g transform="translate(285,385)">
+        <rect class="flow-label-box" x="-50" y="-11" width="100" height="20" stroke="#9B6FE8" fill="#0E1225"/>
+        <text class="flow-label-text" x="0" y="1" fill="#9B6FE8">production margin</text>
+      </g>
+
+      <!-- Value back to Select -->
+      <g transform="translate(265,418)">
+        <rect class="flow-label-box" x="-46" y="-10" width="92" height="18" stroke="rgba(136,152,181,0.3)" fill="#090C1C"/>
+        <text class="flow-label-text" x="0" y="1" fill="#8898B5" style="font-weight:500;">brand portfolio access</text>
+      </g>
+
+      <!-- Distributor label -->
+      <g transform="translate(698,390)">
+        <rect class="flow-label-box" x="-52" y="-11" width="104" height="20" stroke="#00C896" fill="#0E1225"/>
+        <text class="flow-label-text" x="0" y="1" fill="#00C896">commitment + spread</text>
+      </g>
+
+      <!-- Value back to distributors -->
+      <g transform="translate(702,425)">
+        <rect class="flow-label-box" x="-46" y="-10" width="92" height="18" stroke="rgba(136,152,181,0.3)" fill="#090C1C"/>
+        <text class="flow-label-text" x="0" y="1" fill="#8898B5" style="font-weight:500;">pooled buying power</text>
+      </g>
+
+      <!-- Legend -->
+      <g transform="translate(30, 555)">
+        <rect x="0" y="-8" width="440" height="24" rx="6" fill="rgba(14,18,37,0.8)" stroke="rgba(136,152,181,0.15)" stroke-width="1"/>
+        <line x1="10" y1="4" x2="38" y2="4" stroke="#30B4E6" stroke-width="2" stroke-dasharray="8 5"/>
+        <text x="44" y="8" fill="#8898B5" font-size="11" font-family="system-ui">Money flow (to brandhub)</text>
+        <line x1="210" y1="4" x2="238" y2="4" stroke="#8898B5" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.5"/>
+        <text x="244" y="8" fill="#8898B5" font-size="11" font-family="system-ui">Value flow (to participant)</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- ── FLYWHEEL ── -->
+  <p class="section-title">The Flywheel</p>
+  <div class="flywheel-grid" style="margin-bottom: 48px;">
+    <div class="flywheel-step">
+      <div class="step-num" style="color:var(--blue);">01 · Brand Growth</div>
+      <div class="step-headline">More brand clients join</div>
+      <div class="step-body">Each new brand brings their existing vendor relationships and POS spend — no new vendor sourcing required to launch.</div>
+    </div>
+    <div class="flywheel-step">
+      <div class="step-num" style="color:var(--amber);">02 · Vendor Pull</div>
+      <div class="step-headline">More spend = more vendors want in</div>
+      <div class="step-body">Platform spend volume attracts new vendors who pay to access the brand buyer network — growing the catalog and improving pricing for all brands.</div>
+    </div>
+    <div class="flywheel-step">
+      <div class="step-num" style="color:var(--purple);">03 · Select Leverage</div>
+      <div class="step-headline">Visibility drives production wins</div>
+      <div class="step-body">brandhub shows Select's pricing and capability across every category. More brands on the platform means more production opportunities for Select to compete and win.</div>
+    </div>
+    <div class="flywheel-step">
+      <div class="step-num" style="color:var(--teal);">04 · Distributor Gravity</div>
+      <div class="step-headline">Scale unlocks distributor deals</div>
+      <div class="step-body">As brand count grows, distributors gain access to a structured multi-brand POS program with pooled buying power — creating a new revenue layer tied to volume.</div>
+    </div>
+  </div>
+
+  <!-- ── WHO BENEFITS ── -->
+  <p class="section-title">Who Benefits · What They Pay</p>
+  <div class="who-benefits">
+    <div class="wb-header">
+      <div class="wb-cell header">Participant</div>
+      <div class="wb-cell header">What they get</div>
+      <div class="wb-cell header">What they pay</div>
+      <div class="wb-cell header">Why they stay</div>
+    </div>
+    <div class="wb-row">
+      <div class="wb-cell participant" style="color:var(--blue);">🏢 Brand Clients</div>
+      <div class="wb-cell value">One platform for all POS ordering, vendor management, budget visibility, field ops, compliance, and reporting</div>
+      <div class="wb-cell pays">$48K/yr platform fee<br>Optional managed service (5–15%)</div>
+      <div class="wb-cell value">Saves more than it costs. Procurement control without slowing down sales.</div>
+    </div>
+    <div class="wb-row">
+      <div class="wb-cell participant" style="color:var(--amber);">🏭 Vendors</div>
+      <div class="wb-cell value">Direct access to a growing pool of alc bev brand buyers. No cold outreach — brand spend flows through brandhub</div>
+      <div class="wb-cell pays">2% of spend that flows through their category on the platform (client-brought vendors exempt)</div>
+      <div class="wb-cell value">More brand relationships with zero sales effort. Pay only when business flows.</div>
+    </div>
+    <div class="wb-row">
+      <div class="wb-cell participant" style="color:var(--purple);">⚙️ Select Design</div>
+      <div class="wb-cell value">First-look at all print, display, and specialty production across every brand on the platform</div>
+      <div class="wb-cell pays">Builds and operates brandhub. Production wins replace managed service fee — no double-dip.</div>
+      <div class="wb-cell value">Platform creates a defensible production pipeline at scale. Visibility drives incremental wins.</div>
+    </div>
+    <div class="wb-row">
+      <div class="wb-cell participant" style="color:var(--teal);">🚚 Distributors</div>
+      <div class="wb-cell value">Structured POS programs across their brand portfolio. Pooled buying power and margin on production</div>
+      <div class="wb-cell pays">Brand commitment ($25K/brand/state) + the spread on production volume</div>
+      <div class="wb-cell value">Turns fragmented brand POS into a managed, scalable program with margin attached.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

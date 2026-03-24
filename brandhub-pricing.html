@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brandhub Pricing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:     #1D1846;
+      --blue:     #30B4E6;
+      --blue-lt:  #62CFE5;
+      --orange:   #FF9119;
+      --green:    #28C864;
+      --purple:   #9B6FE8;
+      --gray:     #DADADA;
+      --bg:       #090C1C;
+      --surface:  #0E1225;
+      --card:     #141A30;
+      --border:   rgba(255,255,255,0.07);
+      --border-s: rgba(255,255,255,0.13);
+      --blue-dim: rgba(48,180,230,0.12);
+      --blue-glow:rgba(48,180,230,0.28);
+      --org-dim:  rgba(255,145,25,0.12);
+      --org-glow: rgba(255,145,25,0.28);
+      --red:      #FF5C5C;
+      --red-dim:  rgba(255,92,92,0.1);
+      --text:     #EEF2F8;
+      --muted:    #8898B5;
+      --muted2:   #364866;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;padding:48px 0 80px}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 40px}
+    h2.sec-title{font-size:clamp(28px,4vw,46px);font-weight:900;letter-spacing:-1.5px;line-height:1.12;margin-bottom:16px;text-align:left}
+    p.sec-sub{font-size:16px;color:var(--muted);max-width:780px;line-height:1.75;margin-bottom:40px}
+    .label{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+    /* ── Pricing / Rate Card section ── */
+  #pricing{background:var(--surface)}
+  .rc-base-card{background:#0F1A2E;border:1.5px solid var(--blue);border-radius:14px;padding:36px 36px 30px;position:relative;margin-bottom:30px}
+  .rc-base-pill{position:relative;top:0;left:0;display:inline-block;background:var(--blue);color:#fff;font-size:10.5px;font-weight:800;padding:4px 15px;border-radius:20px;letter-spacing:.07em;white-space:nowrap;margin-bottom:20px}
+  .rc-base-price{font-size:46px;font-weight:900;color:var(--text);letter-spacing:-2.5px;line-height:1}
+  .rc-base-price span{font-size:15px;font-weight:400;color:var(--muted);margin-left:6px;letter-spacing:0}
+  .rc-includes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px 32px;flex:1;min-width:280px}
+  .rc-include-item{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(238,242,248,.82)}
+  .rc-include-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex-shrink:0}
+  .rc-section-label{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;text-transform:uppercase}
+  .rc-modules-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
+  .rc-module-card{background:#0B1120;border-radius:10px;padding:22px 20px 18px;position:relative;overflow:hidden}
+  .rc-module-bar{position:absolute;top:0;left:0;width:100%;height:3px}
+  .rc-module-name{font-size:14.5px;font-weight:800;color:var(--text);margin:10px 0 7px}
+  .rc-module-price{font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:4px}
+  .rc-module-yr{font-size:11px;font-weight:400;color:var(--muted)}
+  .rc-module-desc{font-size:11.5px;color:var(--muted);line-height:1.55;margin-bottom:10px}
+  .rc-tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin:2px 2px 0 0;border:1px solid transparent}
+  .rc-bundles-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .rc-bundle-card{background:#0B1120;border-radius:10px;padding:20px 18px 16px;border:1px solid #1F2D45;position:relative}
+  .rc-bundle-card.rc-featured{border-color:var(--purple);background:#0E0B1A}
+  .rc-bundle-pop{position:absolute;top:-11px;right:14px;font-size:9.5px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.05em}
+  .rc-bundle-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:8px}
+  .rc-bundle-price{font-size:24px;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:3px}
+  .rc-bundle-savings{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:10px}
+  .rc-bundle-includes{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+  .rc-bundle-item{font-size:11.5px;color:rgba(238,242,248,.75);display:flex;align-items:center;gap:6px;margin-bottom:4px}
+  .rc-bundle-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+  .rc-bundle-best{font-size:10.5px;color:var(--muted);font-style:italic;margin-top:8px}
+  .rc-addons-strip{background:#0B1225;border:1px solid #1F2D45;border-radius:10px;padding:18px 28px;display:flex;gap:0;align-items:stretch}
+  .rc-addon-block{flex:1;padding:0 24px}
+  .rc-addon-block:first-child{padding-left:0}
+  .rc-addon-divider{width:1px;background:#1F2D45;flex-shrink:0}
+  .rc-addon-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+  .rc-addon-val{font-size:14.5px;font-weight:800;color:var(--text)}
+  .rc-addon-desc{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .rc-required-note{font-size:11px;color:var(--muted);font-style:italic;margin-top:6px}
+  @media(max-width:900px){.rc-modules-grid,.rc-bundles-grid{grid-template-columns:repeat(2,1fr)}.rc-includes-grid{grid-template-columns:1fr}.rc-addons-strip{flex-direction:column;gap:16px}.rc-addon-divider{display:none}.rc-addon-block{padding:0}}
+  @media(max-width:600px){.rc-modules-grid,.rc-bundles-grid{grid-template-columns:1fr}}
+    .rc-toggle-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+  .rc-toggle-btn{display:inline-flex;align-items:center;gap:8px;background:#0F1A2E;border:1px solid var(--blue);color:var(--blue);font-size:12px;font-weight:700;padding:9px 20px;border-radius:30px;cursor:pointer;transition:background .2s,color .2s;letter-spacing:.04em;white-space:nowrap}
+  .rc-toggle-btn:hover{background:var(--blue);color:#fff}
+  .rc-toggle-btn .rc-arrow{display:inline-block;transition:transform .35s cubic-bezier(.4,0,.2,1);font-size:11px}
+  .rc-toggle-btn.open .rc-arrow{transform:rotate(180deg)}
+  .rc-pricing-body{overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .35s ease;max-height:0;opacity:0}
+  .rc-pricing-body.open{max-height:3000px;opacity:1}
+  </style>
+</head>
+<body>
+  <section id="pricing" style="background:var(--surface);padding:80px 0">
+    
+  <div class="wrap">
+    <div class="label fade-up">Pricing</div>
+    <h2 class="sec-title fade-up">Modular pricing.<br><span style="color:var(--blue)">Built around how you actually work.</span></h2>
+    <p class="sec-sub fade-up" style="text-align:left;margin-left:0;max-width:780px">Start with the Platform Base and add only what you need — or choose a bundle for the best rate. No per-seat surprises. No hidden fees.</p>
+
+    <div class="rc-toggle-bar fade-up">
+      <div style="font-size:13px;color:var(--muted)">Platform Base &nbsp;·&nbsp; 3 modules &nbsp;·&nbsp; 2 bundles</div>
+      <button class="rc-toggle-btn" id="rc-toggle-btn" onclick="togglePricing()" aria-expanded="false">
+        <span>View full rate card</span>
+        <span class="rc-arrow">&#9660;</span>
+      </button>
+    </div>
+    <div class="rc-pricing-body" id="rc-pricing-body">
+    <!-- PLATFORM BASE -->
+    <div class="rc-base-card fade-up">
+      <div class="rc-base-pill">PLATFORM BASE &nbsp;·&nbsp; REQUIRED FOR ALL MODULES &amp; BUNDLES</div>
+      <div style="display:flex;align-items:flex-start;gap:40px;flex-wrap:wrap;margin-top:8px">
+        <div style="flex-shrink:0">
+          <div class="rc-base-price">$48,000<span>/year</span></div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:6px">100 users &nbsp;·&nbsp; 500 SKUs &nbsp;·&nbsp; distributor portal included</div>
+        </div>
+        <div style="flex:1;min-width:280px">
+          <div style="font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;text-transform:uppercase">What's included</div>
+          <div class="rc-includes-grid">
+            <div class="rc-include-item"><div class="rc-include-dot"></div>Order Windows &amp; programs</div>
+            <div class="rc-include-item"><div class="rc-include-dot"></div>POs &amp; invoicing</div>
+            <div class="rc-include-item"><div class="rc-include-dot"></div>SAM ordering &amp; approvals</div>
+            <div class="rc-include-item"><div class="rc-include-dot"></div>Reporting &amp; analytics</div>
+            <div class="rc-include-item"><div class="rc-include-dot"></div>Product portfolio management</div>
+            <div class="rc-include-item"><div class="rc-include-dot"></div>Distributor Portal</div>
+            <div class="rc-include-item"><div class="rc-include-dot"></div>Onboarding &amp; setup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="rc-section-label fade-up">&agrave; la carte modules &nbsp;&mdash;&nbsp; add to Platform Base</div>
+    <div class="rc-modules-grid fade-up" style="grid-template-columns:repeat(3,1fr)">
+
+
+      <div class="rc-module-card">
+        <div class="rc-module-bar" style="background:var(--blue)"></div>
+        <div class="rc-module-name">PriceCheck</div>
+        <div class="rc-module-price" style="color:var(--blue)">$20,000<span class="rc-module-yr">/yr</span></div>
+        <div class="rc-module-desc">AI-powered POS asset classification and competitive price benchmarking for smarter sourcing decisions.</div>
+        <span class="rc-tag" style="color:var(--blue);border-color:rgba(48,180,230,.25);background:rgba(48,180,230,.07)">Price Intel</span>
+        <span class="rc-tag" style="color:var(--blue);border-color:rgba(48,180,230,.25);background:rgba(48,180,230,.07)">AI Classification</span>
+      </div>
+
+      <div class="rc-module-card">
+        <div class="rc-module-bar" style="background:var(--orange)"></div>
+        <div class="rc-module-name">RFQ Management</div>
+        <div class="rc-module-price" style="color:var(--orange)">$10,000<span class="rc-module-yr">/yr</span></div>
+        <div class="rc-module-desc">Streamlined vendor RFQ workflows, bid comparison, and award tracking — all in one place.</div>
+        <span class="rc-tag" style="color:var(--orange);border-color:rgba(255,145,25,.25);background:rgba(255,145,25,.07)">Vendor Bids</span>
+        <span class="rc-tag" style="color:var(--orange);border-color:rgba(255,145,25,.25);background:rgba(255,145,25,.07)">Procurement</span>
+      </div>
+
+      <div class="rc-module-card">
+        <div class="rc-module-bar" style="background:var(--purple)"></div>
+        <div class="rc-module-name">DemandIQ</div>
+        <div class="rc-module-price" style="color:var(--purple)">$20,000<span class="rc-module-yr">/yr</span></div>
+        <div class="rc-module-desc">Predictive demand intelligence using field signals and historical patterns to right-size production orders.</div>
+        <span class="rc-tag" style="color:var(--purple);border-color:rgba(155,111,232,.25);background:rgba(155,111,232,.07)">Forecasting</span>
+        <span class="rc-tag" style="color:var(--purple);border-color:rgba(155,111,232,.25);background:rgba(155,111,232,.07)">Demand Signals</span>
+      </div>
+
+    </div>
+
+    <!-- BUNDLES -->
+    <div class="rc-section-label fade-up">Pre-built bundles &nbsp;&mdash;&nbsp; save 20% vs. individual · Base required</div>
+    <div class="rc-bundles-grid fade-up" style="grid-template-columns:repeat(2,1fr)">
+
+
+      <div class="rc-bundle-card">
+        <div class="rc-bundle-name">Procurement</div>
+        <div class="rc-bundle-price" style="color:var(--blue)">$62,000</div>
+        <span class="rc-bundle-savings" style="background:rgba(48,180,230,.1);color:var(--blue)">Save $16K/yr</span>
+        <div class="rc-bundle-includes">Includes</div>
+        <div class="rc-bundle-item"><div class="rc-bundle-dot" style="background:var(--blue)"></div>Platform Base</div>
+        <div class="rc-bundle-item"><div class="rc-bundle-dot" style="background:var(--blue)"></div>PriceCheck</div>
+        <div class="rc-bundle-item"><div class="rc-bundle-dot" style="background:var(--blue)"></div>RFQ Management</div>
+        <div class="rc-bundle-best">Best for: sourcing &amp; vendor teams</div>
+      </div>
+
+      <div class="rc-bundle-card rc-featured">
+        <div class="rc-bundle-pop" style="background:var(--purple);color:#fff">MOST POPULAR</div>
+        <div class="rc-bundle-name">brandhubAI</div>
+        <div class="rc-bundle-price" style="color:var(--purple)">$78,000</div>
+        <span class="rc-bundle-savings" style="background:rgba(155,111,232,.12);color:var(--purple)">Save $20K/yr</span>
+        <div class="rc-bundle-includes">Includes</div>
+        <div class="rc-bundle-item"><div class="rc-bundle-dot" style="background:var(--purple)"></div>Platform Base</div>
+        <div class="rc-bundle-item"><div class="rc-bundle-dot" style="background:var(--purple)"></div>PriceCheck</div>
+        <div class="rc-bundle-item"><div class="rc-bundle-dot" style="background:var(--purple)"></div>RFQ Management</div>
+        <div class="rc-bundle-item"><div class="rc-bundle-dot" style="background:var(--purple)"></div>DemandIQ</div>
+        <div class="rc-bundle-best">Best for: full intelligence stack</div>
+      </div>
+
+
+    </div>
+
+    <!-- ADD-ONS -->
+    <div class="rc-addons-strip fade-up">
+      <div class="rc-addon-block">
+        <div class="rc-addon-label">Add-on &nbsp;·&nbsp; User Expansion</div>
+        <div class="rc-addon-val">+$6,000 / year</div>
+        <div class="rc-addon-desc">Per additional 100 users beyond the base 100</div>
+      </div>
+      <div class="rc-addon-divider"></div>
+      <div class="rc-addon-block">
+        <div class="rc-addon-label">Select Production Credit</div>
+        <div class="rc-addon-val">$12K &ndash; $24K credit</div>
+        <div class="rc-addon-desc">$12,000 credit at $400K+ production through Select &nbsp;&nbsp;&bull;&nbsp;&nbsp; $24,000 credit at $800K+ production</div>
+      </div>
+    </div>
+
+
+    </div><!-- /rc-pricing-body -->
+  </div>
+
+  </section>
+  <script>
+    function togglePricing() {
+    var body = document.getElementById('rc-pricing-body');
+    var btn  = document.getElementById('rc-toggle-btn');
+    var open = body.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+    btn.querySelector('span:first-child').textContent = open ? 'Collapse rate card' : 'View full rate card';
+  }
+  </script>
+</body>
+</html>
