@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>brandhub — The brandhub Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:    #090C1C;
+  --surface: #0D1120;
+  --card:  #111827;
+  --card2: #0F1523;
+  --border:#1E2A3D;
+  --border-s:#1A2436;
+  --text:  #F0F4FF;
+  --muted: #6B7FA3;
+  --muted2:#2A3A55;
+  --blue:  #30B4E6;
+  --blue-dim:rgba(48,180,230,.15);
+  --orange:#FF9119;
+  --org-dim:rgba(255,145,25,.15);
+  --green: #28C864;
+  --red:   #FF4A4A;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0}
+
+/* ── Layout ── */
+.page{max-width:960px;margin:0 auto;padding:60px 32px 80px}
+
+/* ── Header ── */
+.page-header{text-align:center;margin-bottom:64px}
+.bh-logo{font-size:15px;font-weight:900;color:var(--blue);letter-spacing:-.3px;margin-bottom:32px;display:inline-block}
+.page-label{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+.page-title{font-size:clamp(28px,5vw,48px);font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:12px}
+.page-sub{font-size:15px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.65}
+
+/* ── Insight cards ── */
+.tc-cards{display:flex;flex-wrap:wrap;gap:24px;margin-bottom:56px}
+.tc-card{background:var(--card);border:1px solid var(--border-s);border-radius:20px;padding:32px;display:flex;flex-direction:column;flex:1;min-width:280px}
+.tc-card-num{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.tc-card-q{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-.3px;line-height:1.3;margin-bottom:20px}
+
+/* Triple bid table */
+.tc-bid-table{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.tc-bid-hdr{display:grid;grid-template-columns:1fr 1fr 1fr;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border)}
+.tc-bid-hdr span{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:center}
+.tc-bid-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+.tc-bid-row:last-child{border-bottom:none}
+.tc-bid-cell{padding:12px 14px;text-align:center;font-size:13px}
+.tc-bid-cell.lbl{font-size:11px;color:var(--muted);font-weight:600;text-align:left}
+.tc-bid-cell.price{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-.5px}
+.tc-bid-cell.fee-hi{font-weight:800;color:var(--orange)}
+.tc-bid-cell.fee-mid{font-weight:800;color:rgba(255,145,25,.6)}
+.tc-bid-cell.fee-lo{font-weight:800;color:var(--green)}
+
+/* PO comparison */
+.tc-po-rows{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.tc-po-row{display:grid;grid-template-columns:130px 1fr auto;gap:12px;align-items:center;padding:14px 18px}
+.tc-po-row+.tc-po-row{border-top:1px solid var(--border)}
+.tc-po-amt{font-size:14px;font-weight:800;color:var(--text)}
+.tc-po-work{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-weight:600;flex-wrap:wrap}
+.tc-work-arr{color:var(--muted2);font-size:10px}
+.tc-po-fee{font-size:16px;font-weight:900;text-align:right;letter-spacing:-.5px;white-space:nowrap}
+.tc-po-fee.hi{color:var(--orange)}
+.tc-po-fee.lo{color:var(--muted)}
+
+/* Bid table verdict row */
+.tc-bid-row.verdict-sep{border-top:1px solid rgba(255,255,255,.08)!important}
+.tc-bid-cell.verdict-you{font-size:11px;font-weight:800;color:var(--green);background:rgba(40,200,100,.07)}
+.tc-bid-cell.verdict-them{font-size:11px;font-weight:800;color:var(--orange);background:rgba(255,145,25,.07)}
+.tc-bid-cell.verdict-neutral{font-size:11px;color:var(--muted2);background:transparent}
+.tc-bid-cell.verdict-best-shown{font-size:11px;font-weight:800;color:var(--blue);background:rgba(48,180,230,.07)}
+/* 4-column bid table */
+.tc-bid-table.four-col .tc-bid-hdr,.tc-bid-table.four-col .tc-bid-row{grid-template-columns:1fr 1fr 1fr 1fr}
+.tc-bid-table.four-col .tc-bid-cell.lbl{grid-column:1/5}
+.tc-bid-group-hdr{display:grid;grid-template-columns:3fr 1fr;border-bottom:1px solid var(--border)}
+.tc-bid-group-hdr span{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:7px 14px}
+.tc-bid-group-hdr .in-bid{color:var(--muted);background:rgba(255,255,255,.015);border-right:2px dashed rgba(255,145,25,.3)}
+.tc-bid-group-hdr .not-in-bid{color:var(--orange);background:rgba(255,145,25,.05)}
+.tc-bid-hdr .excl-hdr{border-left:2px dashed rgba(255,145,25,.3);background:rgba(255,145,25,.04)}
+.tc-bid-cell.excl{border-left:2px dashed rgba(255,145,25,.3)}
+.tc-bid-cell.excl.price{background:rgba(255,145,25,.03)}
+
+/* PO comparison table */
+.tc-po-compare{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.tc-po-compare-hdr{display:grid;grid-template-columns:100px 1fr 1fr;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border)}
+.tc-po-compare-hdr>*{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:center}
+.tc-po-compare-hdr>*:first-child{text-align:left}
+.tc-po-cmp-row{display:grid;grid-template-columns:100px 1fr 1fr;border-bottom:1px solid var(--border)}
+.tc-po-cmp-row:last-child{border-bottom:none}
+.tc-po-cmp-lbl{font-size:11px;font-weight:600;color:var(--muted);padding:13px 14px;display:flex;align-items:center}
+.tc-po-cmp-cell{padding:13px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.tc-po-cmp-cell.same{background:rgba(48,180,230,.04);font-size:14px;font-weight:800;color:var(--text)}
+.tc-po-cmp-cell.work-steps{background:rgba(48,180,230,.04);font-size:11px;font-weight:600;color:var(--muted)}
+.tc-po-cmp-cell.fee-hi{font-size:19px;font-weight:900;color:var(--orange);letter-spacing:-.5px}
+.tc-po-cmp-cell.fee-lo{font-size:19px;font-weight:900;color:var(--muted);letter-spacing:-.5px}
+.tc-po-work-row{display:flex;align-items:center;gap:4px;justify-content:center}
+.tc-po-work-arr{color:var(--muted2);font-size:9px}
+.tc-po-same-tag{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--blue);background:rgba(48,180,230,.1);border:1px solid rgba(48,180,230,.2);border-radius:4px;padding:2px 7px}
+
+/* Takeaway + brandhub approach */
+.tc-takeaway{font-size:13px;color:var(--muted);line-height:1.65;padding:14px 16px;border-radius:10px;background:rgba(48,180,230,.05);border:1px solid rgba(48,180,230,.15);margin-bottom:12px}
+.tc-takeaway strong{color:var(--text)}
+.tc-approach{font-size:13px;font-weight:700;color:var(--green);padding:12px 16px;border-radius:10px;background:rgba(40,200,100,.07);border:1px solid rgba(40,200,100,.2);margin-top:auto}
+.tc-approach-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);opacity:.7;margin-bottom:4px}
+
+/* ── Calculator ── */
+.calc-section{background:var(--card);border:1px solid var(--border-s);border-radius:22px;padding:40px}
+.calc-header{text-align:center;margin-bottom:32px}
+.calc-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.calc-title{font-size:clamp(18px,3vw,26px);font-weight:900;letter-spacing:-.5px;margin-bottom:6px}
+.calc-desc{font-size:13px;color:var(--muted);line-height:1.6;max-width:440px;margin:0 auto}
+
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px}
+.slider-group label{display:block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.slider-val{font-size:32px;font-weight:900;letter-spacing:-1.5px;color:var(--blue);margin-bottom:6px}
+.slider-val.orange{color:var(--orange)}
+input[type=range]{width:100%;appearance:none;height:5px;border-radius:3px;background:var(--muted2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:var(--blue);cursor:pointer;box-shadow:0 0 0 4px rgba(48,180,230,.2);transition:box-shadow .2s}
+input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 7px rgba(48,180,230,.2)}
+.orange-track::-webkit-slider-thumb{background:var(--orange)!important;box-shadow:0 0 0 4px rgba(255,145,25,.2)!important}
+.orange-track::-webkit-slider-thumb:hover{box-shadow:0 0 0 7px rgba(255,145,25,.2)!important}
+.range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+
+/* Three columns */
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.col{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:7px;position:relative}
+.col.featured{border-color:rgba(48,180,230,.4);background:rgba(48,180,230,.04)}
+.col-name{font-size:14px;font-weight:900;color:var(--text);margin-top:6px}
+.col-sub{font-size:11px;color:var(--muted);margin-bottom:4px}
+.line{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--border)}
+.line:last-of-type{border:none}
+.line span+span{font-weight:700;color:var(--text)}
+.line.bad span+span{color:var(--orange)}
+.line.good span+span{color:var(--green)}
+.line.zero span+span{color:var(--green)}
+.line.total{border-top:1px solid var(--border-s)!important;padding-top:9px!important;margin-top:2px}
+.line.total span{font-weight:900!important;font-size:13px!important;color:var(--text)!important}
+.save-badge{font-size:13px;font-weight:800;color:var(--green);text-align:center;padding:9px;background:rgba(40,200,100,.08);border:1px solid rgba(40,200,100,.2);border-radius:8px}
+.save-badge.hidden{visibility:hidden}
+
+.footnote{font-size:11px;color:var(--muted);text-align:center;line-height:1.6}
+.footnote code{font-family:monospace;background:var(--surface);padding:1px 5px;border-radius:3px;font-size:10px;color:var(--muted)}
+.line-detail{font-size:11px;color:var(--muted);text-align:right;margin-top:-4px;margin-bottom:2px}
+
+/* Hourly blocks */
+.blocks-explainer{margin-top:24px;background:var(--surface);border:1px solid var(--border-s);border-radius:14px;padding:24px 28px}
+.blocks-title{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+.blocks-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.blocks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.block-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.block-hrs{font-size:20px;font-weight:900;color:var(--blue);letter-spacing:-.5px}
+.block-rate{font-size:11px;color:var(--muted);margin:3px 0}
+.block-total{font-size:13px;font-weight:800;color:var(--green)}
+.blocks-note{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* ── Divider ── */
+.section-divider{text-align:center;margin:48px 0 40px;display:flex;align-items:center;gap:16px}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-divider span{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);white-space:nowrap}
+
+/* ── Footer ── */
+.page-footer{text-align:center;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+.page-footer p{font-size:12px;color:var(--muted);line-height:1.7}
+.page-footer a{color:var(--blue);text-decoration:none}
+
+/* ── Responsive ── */
+@media(max-width:700px){
+  .page{padding:40px 20px 60px}
+  .tc-cards{flex-direction:column}
+  .sliders{grid-template-columns:1fr}
+  .cols{grid-template-columns:1fr}
+  .tc-po-row{grid-template-columns:1fr;gap:4px}
+  .tc-po-fee{text-align:left}
+  .blocks-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="bh-logo">brandhub</div>
+    <div class="page-label">The brandhub Model</div>
+    <h1 class="page-title">Redefining how trade marketing<br><span style="color:var(--blue)">is managed and paid for.</span></h1>
+    <p class="page-sub">We didn't set out to be another managed service provider. We set out to build something fundamentally different — a model that's transparent, aligned, and built for how the industry actually works.</p>
+  </div>
+
+  <!-- INSIGHT CARDS -->
+  <div class="tc-cards">
+
+    <!-- Insight 1 — Pricing alignment -->
+    <div class="tc-card">
+      <div class="tc-card-num">01</div>
+      <div class="tc-card-q">The triple bid gives you three options. Your partner chooses which three. Whose interests guide that decision?</div>
+      <div class="tc-bid-table four-col">
+        <!-- Group header -->
+        <div class="tc-bid-group-hdr">
+          <span class="in-bid">The triple bid — what you see</span>
+          <span class="not-in-bid">Outside the bid</span>
+        </div>
+        <!-- Vendor names -->
+        <div class="tc-bid-hdr">
+          <span>Vendor A</span><span>Vendor B</span><span>Vendor C</span>
+          <span class="excl-hdr">Vendor D</span>
+        </div>
+        <!-- Prices -->
+        <div class="tc-bid-row">
+          <div class="tc-bid-cell price">$200</div>
+          <div class="tc-bid-cell price">$190</div>
+          <div class="tc-bid-cell price">$185</div>
+          <div class="tc-bid-cell price excl">$100</div>
+        </div>
+        <!-- Fee label -->
+        <div class="tc-bid-row">
+          <div class="tc-bid-cell lbl">Their markup fee (15%)</div>
+        </div>
+        <!-- Fees -->
+        <div class="tc-bid-row">
+          <div class="tc-bid-cell fee-hi">$30.00</div>
+          <div class="tc-bid-cell fee-mid">$28.50</div>
+          <div class="tc-bid-cell fee-mid" style="color:rgba(255,145,25,.45)">$27.75</div>
+          <div class="tc-bid-cell fee-lo excl">$15.00</div>
+        </div>
+        <!-- Verdict -->
+        <div class="tc-bid-row verdict-sep">
+          <div class="tc-bid-cell verdict-them">High fee for them</div>
+          <div class="tc-bid-cell verdict-neutral">—</div>
+          <div class="tc-bid-cell verdict-best-shown">✓ Best of 3 bids</div>
+          <div class="tc-bid-cell verdict-you excl">✓ Best for you</div>
+        </div>
+      </div>
+      <div class="tc-takeaway">Of the three vendors you see, $185 looks competitive. But your partner controls who gets invited to bid — and including Vendor D would cut their fee by 50%. <strong>You only see the options they choose to show you.</strong></div>
+      <div class="tc-approach">
+        <div class="tc-approach-label">The brandhub approach</div>
+        Flat subscription. We earn the same whether you buy at $200 or $100. Every dollar you save is just a win.
+      </div>
+    </div>
+
+    <!-- Insight 2 — PO / service fees -->
+    <div class="tc-card">
+      <div class="tc-card-num">02</div>
+      <div class="tc-card-q">Should the fee for managing a purchase order scale with its dollar value?</div>
+      <div class="tc-po-compare">
+        <div class="tc-po-compare-hdr">
+          <div></div>
+          <div>$1,000,000 PO</div>
+          <div>$1,000 PO</div>
+        </div>
+        <div class="tc-po-cmp-row">
+          <div class="tc-po-cmp-lbl">Markup rate</div>
+          <div class="tc-po-cmp-cell same">15%<div class="tc-po-same-tag">Same</div></div>
+          <div class="tc-po-cmp-cell same">15%<div class="tc-po-same-tag">Same</div></div>
+        </div>
+        <div class="tc-po-cmp-row">
+          <div class="tc-po-cmp-lbl">Work involved</div>
+          <div class="tc-po-cmp-cell work-steps">
+            <div class="tc-po-work-row">📧<span class="tc-po-work-arr">→</span>✓ Approve<span class="tc-po-work-arr">→</span>💳</div>
+            <div class="tc-po-same-tag">Same</div>
+          </div>
+          <div class="tc-po-cmp-cell work-steps">
+            <div class="tc-po-work-row">📧<span class="tc-po-work-arr">→</span>✓ Approve<span class="tc-po-work-arr">→</span>💳</div>
+            <div class="tc-po-same-tag">Same</div>
+          </div>
+        </div>
+        <div class="tc-po-cmp-row">
+          <div class="tc-po-cmp-lbl">Fee charged</div>
+          <div class="tc-po-cmp-cell fee-hi">$150,000</div>
+          <div class="tc-po-cmp-cell fee-lo">$150</div>
+        </div>
+      </div>
+      <div class="tc-takeaway">Same markup rate. Same process. Same effort. <strong>A 1,000× difference in fee — driven entirely by transaction size, not the work it takes to complete it.</strong></div>
+      <div class="tc-approach">
+        <div class="tc-approach-label">The brandhub approach</div>
+        Hourly blocks. You pay for the time it actually takes — not a percentage of what you're buying.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-divider"><span>Run your numbers</span></div>
+
+  <!-- COST COMPARISON CALCULATOR -->
+  <style>
+  .nc-wrap{background:var(--card);border:1px solid var(--border-s);border-radius:22px;padding:40px}
+  .nc-hdr{text-align:center;margin-bottom:32px}
+  .nc-hdr-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+  .nc-hdr-title{font-size:clamp(18px,3vw,26px);font-weight:900;letter-spacing:-.5px;margin-bottom:6px}
+  .nc-hdr-desc{font-size:13px;color:var(--muted);max-width:480px;margin:0 auto;line-height:1.6}
+  /* Top inputs */
+  .nc-top{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+  .nc-inp-group label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .nc-inp-note{font-size:9px;font-weight:600;letter-spacing:1px;color:var(--blue);opacity:.7;margin-left:8px;text-transform:uppercase}
+  .nc-money-wrap{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border-s);border-radius:10px;overflow:hidden;transition:border-color .15s}
+  .nc-money-wrap:focus-within{border-color:rgba(255,255,255,.25)}
+  .nc-money-wrap.bh{border-color:rgba(48,180,230,.3);background:rgba(48,180,230,.04)}
+  .nc-money-wrap.bh:focus-within{border-color:rgba(48,180,230,.6)}
+  .nc-money-prefix{font-size:16px;font-weight:700;color:var(--muted);padding:0 8px 0 14px;flex-shrink:0}
+  .nc-money-field{flex:1;background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:20px;font-weight:900;color:var(--text);padding:12px 14px 12px 0;letter-spacing:-.5px;min-width:0}
+  .nc-money-field.bh{color:var(--blue)}
+  /* Table */
+  .nc-tbl-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);margin-bottom:6px}
+  .nc-tbl{width:100%;border-collapse:collapse}
+  .nc-tbl th,.nc-tbl td{padding:0;border:none}
+  /* Model header */
+  .nc-mhdr{background:rgba(255,255,255,.025)}
+  .nc-mhdr th{padding:11px 14px;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;text-align:center}
+  .nc-th-cat{text-align:left!important;color:var(--muted);min-width:140px}
+  .nc-th-pct{color:var(--muted)!important;min-width:88px}
+  .nc-th-ms{color:var(--orange)!important;background:rgba(255,145,25,.05);border-left:1px solid rgba(255,145,25,.2)}
+  .nc-th-bh{color:var(--blue)!important;background:rgba(48,180,230,.05);border-left:1px solid rgba(48,180,230,.2)}
+  /* Sub-header */
+  .nc-shdr th{padding:7px 14px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);text-align:center;border-top:1px solid var(--border)}
+  .nc-sh-ms{background:rgba(255,145,25,.03);border-left:1px solid rgba(255,145,25,.15)}
+  .nc-sh-bh{background:rgba(48,180,230,.03);border-left:1px solid rgba(48,180,230,.12)}
+  /* Data rows */
+  .nc-drow td{border-top:1px solid var(--border);padding:12px 14px;font-size:13px}
+  .nc-drow:hover td{background:rgba(255,255,255,.012)!important}
+  .nc-td-cat{font-size:13px;font-weight:700;color:var(--text)}
+  .nc-td-pct{text-align:center;vertical-align:middle}
+  .nc-td-ms{border-left:1px solid rgba(255,145,25,.15);background:rgba(255,145,25,.02);text-align:center;vertical-align:middle}
+  .nc-td-bh{border-left:1px solid rgba(48,180,230,.12);background:rgba(48,180,230,.02);text-align:center;vertical-align:middle}
+  .nc-td-amt{text-align:right!important;font-variant-numeric:tabular-nums;font-weight:700}
+  .nc-td-amt.ms{color:var(--orange)}
+  .nc-td-amt.bh{color:var(--blue)}
+  /* Inline fee % inputs */
+  .nc-inp-cell{display:flex;align-items:center;gap:4px;justify-content:center}
+  .nc-inp-cell input{width:46px;text-align:center;background:var(--surface);border:1px solid var(--border-s);border-radius:6px;padding:5px 4px;font-size:13px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;outline:none;-moz-appearance:textfield;appearance:textfield}
+  .nc-inp-cell input::-webkit-outer-spin-button,.nc-inp-cell input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .nc-inp-cell input:focus{border-color:var(--blue);background:rgba(48,180,230,.06)}
+  .nc-inp-cell span{font-size:12px;color:var(--muted);font-weight:600}
+  /* % of spend inputs (shared) */
+  .nc-pct-cell-inner{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .nc-pct-inp-wrap{display:flex;align-items:center;gap:3px}
+  .nc-pct-inp-wrap input{width:46px;text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 4px;font-size:13px;font-weight:800;color:var(--text);font-family:'Inter',sans-serif;outline:none;-moz-appearance:textfield;appearance:textfield}
+  .nc-pct-inp-wrap input::-webkit-outer-spin-button,.nc-pct-inp-wrap input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .nc-pct-inp-wrap input:focus{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08)}
+  .nc-pct-inp-wrap span{font-size:12px;color:var(--muted);font-weight:700}
+  .nc-pct-spend{font-size:10px;color:var(--muted2);font-weight:600;font-variant-numeric:tabular-nums;margin-top:1px}
+  /* Summary rows */
+  .nc-srow td{padding:10px 14px;border-top:1px solid var(--border);font-size:12px}
+  .nc-sl{font-weight:600;color:var(--muted);text-align:left}
+  .nc-sv{text-align:right;font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
+  .nc-sv.ms{color:var(--orange)}
+  .nc-sv.bh{color:var(--blue)}
+  .nc-sv.green{color:var(--green)}
+  .nc-sv.muted{color:var(--muted2)}
+  .nc-sv-ms{background:rgba(255,145,25,.025);border-left:1px solid rgba(255,145,25,.12)}
+  .nc-sv-bh{background:rgba(48,180,230,.025);border-left:1px solid rgba(48,180,230,.1)}
+  .nc-grand td{border-top:2px solid rgba(255,255,255,.1)!important;background:rgba(255,255,255,.02)!important}
+  .nc-grand .nc-sv{font-size:16px!important;font-weight:900!important;color:var(--text)!important}
+  /* Pct warning */
+  .nc-pct-warn{text-align:center;font-size:11px;margin-top:6px;transition:color .2s}
+  .nc-pct-warn.ok{color:var(--green)}
+  .nc-pct-warn.warn{color:var(--orange)}
+  /* Savings */
+  .nc-savings{display:flex;align-items:center;justify-content:space-between;padding:20px 26px;background:rgba(40,200,100,.07);border:1px solid rgba(40,200,100,.2);border-radius:14px;margin-top:20px}
+  .nc-sav-label{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--green)}
+  .nc-sav-sub{font-size:11px;color:rgba(40,200,100,.6);font-weight:500;margin-top:2px}
+  .nc-sav-amt{font-size:32px;font-weight:900;color:var(--green);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  @media(max-width:680px){
+    .nc-top{grid-template-columns:1fr}
+    .nc-wrap{padding:24px 18px}
+  }
+  </style>
+
+  <div class="nc-wrap">
+    <div class="nc-hdr">
+      <div class="nc-hdr-label">Cost Comparison</div>
+      <h2 class="nc-hdr-title">See how the models compare for your spend</h2>
+      <p class="nc-hdr-desc">Defaults are pre-populated — adjust total spend, category mix, and fee rates to match your actual situation.</p>
+    </div>
+
+    <!-- Global inputs -->
+    <div class="nc-top">
+      <div class="nc-inp-group">
+        <label>Total Annual POS Spend</label>
+        <div class="nc-money-wrap">
+          <span class="nc-money-prefix">$</span>
+          <input type="text" id="nc-spend" class="nc-money-field" value="10,000,000">
+        </div>
+      </div>
+      <div class="nc-inp-group">
+        <label>brandhub Platform Fee <span class="nc-inp-note">annual · flat</span></label>
+        <div class="nc-money-wrap bh">
+          <span class="nc-money-prefix">$</span>
+          <input type="text" id="nc-platform" class="nc-money-field bh" value="250,000">
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="nc-tbl-wrap">
+      <table class="nc-tbl">
+        <thead>
+          <tr class="nc-mhdr">
+            <th class="nc-th-cat" rowspan="2">Category</th>
+            <th class="nc-th-pct" rowspan="2">% of<br>Spend</th>
+            <th class="nc-th-ms" colspan="2">Managed Service</th>
+            <th class="nc-th-bh" colspan="2">brandhub</th>
+          </tr>
+          <tr class="nc-shdr">
+            <th class="nc-sh-ms">Fee %</th>
+            <th class="nc-sh-ms">Fee ($)</th>
+            <th class="nc-sh-bh">Fee %</th>
+            <th class="nc-sh-bh">Fee ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Print -->
+          <tr class="nc-drow">
+            <td class="nc-td-cat">Print</td>
+            <td class="nc-td-pct">
+              <div class="nc-pct-cell-inner">
+                <div class="nc-pct-inp-wrap">
+                  <input type="number" class="nc-pct-inp" data-i="0" value="30" min="0" max="100">
+                  <span>%</span>
+                </div>
+                <div class="nc-pct-spend" id="nc-cat-spend-0">$3,000,000</div>
+              </div>
+            </td>
+            <td class="nc-td-ms">
+              <div class="nc-inp-cell">
+                <input type="number" class="nc-ms-inp" data-i="0" value="15" min="0" max="100">
+                <span>%</span>
+              </div>
+            </td>
+            <td class="nc-td-ms nc-td-amt ms" id="nc-ms-0">—</td>
+            <td class="nc-td-bh">
+              <div class="nc-inp-cell">
+                <input type="number" class="nc-bh-inp" data-i="0" value="5" min="0" max="100">
+                <span>%</span>
+              </div>
+            </td>
+            <td class="nc-td-bh nc-td-amt bh" id="nc-bh-0">—</td>
+          </tr>
+          <!-- Select-produced -->
+          <tr class="nc-drow">
+            <td class="nc-td-cat">Select-produced</td>
+            <td class="nc-td-pct">
+              <div class="nc-pct-cell-inner">
+                <div class="nc-pct-inp-wrap">
+                  <input type="number" class="nc-pct-inp" data-i="1" value="30" min="0" max="100">
+                  <span>%</span>
+                </div>
+                <div class="nc-pct-spend" id="nc-cat-spend-1">$3,000,000</div>
+              </div>
+            </td>
+            <td class="nc-td-ms">
+              <div class="nc-inp-cell">
+                <input type="number" class="nc-ms-inp" data-i="1" value="15" min="0" max="100">
+                <span>%</span>
+              </div>
+            </td>
+            <td class="nc-td-ms nc-td-amt ms" id="nc-ms-1">—</td>
+            <td class="nc-td-bh">
+              <div class="nc-inp-cell">
+                <input type="number" class="nc-bh-inp" data-i="1" value="0" min="0" max="100">
+                <span>%</span>
+              </div>
+            </td>
+            <td class="nc-td-bh nc-td-amt bh" id="nc-bh-1">—</td>
+          </tr>
+          <!-- All other -->
+          <tr class="nc-drow">
+            <td class="nc-td-cat">All other</td>
+            <td class="nc-td-pct">
+              <div class="nc-pct-cell-inner">
+                <div class="nc-pct-inp-wrap">
+                  <input type="number" class="nc-pct-inp" data-i="2" value="40" min="0" max="100">
+                  <span>%</span>
+                </div>
+                <div class="nc-pct-spend" id="nc-cat-spend-2">$4,000,000</div>
+              </div>
+            </td>
+            <td class="nc-td-ms">
+              <div class="nc-inp-cell">
+                <input type="number" class="nc-ms-inp" data-i="2" value="15" min="0" max="100">
+                <span>%</span>
+              </div>
+            </td>
+            <td class="nc-td-ms nc-td-amt ms" id="nc-ms-2">—</td>
+            <td class="nc-td-bh">
+              <div class="nc-inp-cell">
+                <input type="number" class="nc-bh-inp" data-i="2" value="15" min="0" max="100">
+                <span>%</span>
+              </div>
+            </td>
+            <td class="nc-td-bh nc-td-amt bh" id="nc-bh-2">—</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="nc-srow">
+            <td colspan="2" class="nc-sl">Total managed service fees</td>
+            <td class="nc-sv-ms"></td>
+            <td class="nc-sv-ms nc-sv ms" id="nc-ms-tfee">—</td>
+            <td class="nc-sv-bh"></td>
+            <td class="nc-sv-bh nc-sv bh" id="nc-bh-tfee">—</td>
+          </tr>
+          <tr class="nc-srow">
+            <td colspan="2" class="nc-sl">Platform fee</td>
+            <td class="nc-sv-ms"></td>
+            <td class="nc-sv-ms nc-sv muted">—</td>
+            <td class="nc-sv-bh"></td>
+            <td class="nc-sv-bh nc-sv bh" id="nc-bh-plat-disp">—</td>
+          </tr>
+          <tr class="nc-srow">
+            <td colspan="2" class="nc-sl">Blended fee rate</td>
+            <td class="nc-sv-ms"></td>
+            <td class="nc-sv-ms nc-sv ms" id="nc-ms-blended">—</td>
+            <td class="nc-sv-bh"></td>
+            <td class="nc-sv-bh nc-sv green" id="nc-bh-blended">—</td>
+          </tr>
+          <tr class="nc-srow nc-grand">
+            <td colspan="2" class="nc-sl">Total annual cost</td>
+            <td class="nc-sv-ms"></td>
+            <td class="nc-sv-ms nc-sv" id="nc-ms-grand">—</td>
+            <td class="nc-sv-bh"></td>
+            <td class="nc-sv-bh nc-sv" id="nc-bh-grand">—</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="nc-pct-warn ok" id="nc-pct-warn">Category split: 100% ✓</div>
+
+    <!-- Savings -->
+    <div class="nc-savings">
+      <div>
+        <div class="nc-sav-label">Annual savings with brandhub</div>
+        <div class="nc-sav-sub">vs. current managed service model</div>
+      </div>
+      <div class="nc-sav-amt" id="nc-sav-amt">—</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <p>Built by <a href="https://brandhub.io" target="_blank">brandhub</a> · The trade marketing platform built for the three-tier system.</p>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var N = 3; // number of categories
+
+  function parseMoney(el) {
+    return parseFloat((el.value || '').replace(/,/g, '').replace(/[^0-9.]/g, '')) || 0;
+  }
+  function fmt$(n) { return '$' + Math.round(n).toLocaleString(); }
+  function fmtPct(n) {
+    var s = n.toFixed(1);
+    return (s.slice(-2) === '.0' ? s.slice(0, -2) : s) + '%';
+  }
+
+  function run() {
+    var spend    = parseMoney(document.getElementById('nc-spend'));
+    var platform = parseMoney(document.getElementById('nc-platform'));
+    var msTot = 0, bhTot = 0, pctSum = 0;
+
+    for (var i = 0; i < N; i++) {
+      var pct  = parseFloat(document.querySelector('.nc-pct-inp[data-i="' + i + '"]').value) || 0;
+      var msF  = parseFloat(document.querySelector('.nc-ms-inp[data-i="'  + i + '"]').value) || 0;
+      var bhF  = parseFloat(document.querySelector('.nc-bh-inp[data-i="'  + i + '"]').value) || 0;
+      pctSum  += pct;
+
+      var catSpend = spend * pct / 100;
+      var msAmt    = catSpend * msF / 100;
+      var bhAmt    = catSpend * bhF / 100;
+      msTot += msAmt;
+      bhTot += bhAmt;
+
+      document.getElementById('nc-cat-spend-' + i).textContent = fmt$(catSpend);
+      document.getElementById('nc-ms-' + i).textContent        = fmt$(msAmt);
+      document.getElementById('nc-bh-' + i).textContent        = fmt$(bhAmt);
+    }
+
+    var msCost    = spend + msTot;
+    var bhCost    = spend + bhTot + platform;
+    var msBlended = spend > 0 ? msTot / spend * 100 : 0;
+    var bhBlended = spend > 0 ? bhTot / spend * 100 : 0;
+    var savings   = msCost - bhCost;
+
+    document.getElementById('nc-ms-tfee').textContent    = fmt$(msTot);
+    document.getElementById('nc-bh-tfee').textContent    = fmt$(bhTot);
+    document.getElementById('nc-bh-plat-disp').textContent = fmt$(platform);
+    document.getElementById('nc-ms-blended').textContent = fmtPct(msBlended);
+    document.getElementById('nc-bh-blended').textContent = fmtPct(bhBlended);
+    document.getElementById('nc-ms-grand').textContent   = fmt$(msCost);
+    document.getElementById('nc-bh-grand').textContent   = fmt$(bhCost);
+    document.getElementById('nc-sav-amt').textContent    = fmt$(savings);
+
+    var warnEl = document.getElementById('nc-pct-warn');
+    var pctR   = Math.round(pctSum);
+    warnEl.textContent = 'Category split: ' + pctR + '%' + (pctR === 100 ? ' ✓' : ' — should total 100%');
+    warnEl.className   = 'nc-pct-warn ' + (pctR === 100 ? 'ok' : 'warn');
+  }
+
+  // Money inputs: reformat on blur
+  ['nc-spend', 'nc-platform'].forEach(function(id) {
+    var el = document.getElementById(id);
+    el.addEventListener('blur', function() {
+      var n = parseMoney(this);
+      this.value = n.toLocaleString();
+    });
+    el.addEventListener('input', run);
+  });
+
+  // All number inputs
+  document.querySelectorAll('.nc-pct-inp, .nc-ms-inp, .nc-bh-inp').forEach(function(inp) {
+    inp.addEventListener('input', run);
+  });
+
+  run();
+})();
+</script>
+</body>
+</html>
