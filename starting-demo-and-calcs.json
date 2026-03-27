@@ -1,0 +1,39 @@
+{
+  "title": "starting demo and calcs",
+  "output": "Clients/Generic",
+  "skip_build": false,
+  "sections": [
+    {
+      "id": "case-studies",
+      "source": "brandhub-prelim"
+    },
+    {
+      "id": "how-it-works",
+      "source": "heaven-hill"
+    },
+    {
+      "id": "demand-planning",
+      "source": "brandhub-prelim"
+    },
+    {
+      "id": "quote-requests",
+      "source": "brandhub-prelim"
+    },
+    {
+      "id": "sales-portal",
+      "source": "heaven-hill"
+    },
+    {
+      "id": "atlas",
+      "source": "proximo"
+    },
+    {
+      "id": "calculator",
+      "source": "heaven-hill"
+    },
+    {
+      "id": "pos-pricing",
+      "source": "brandhub-prelim"
+    }
+  ]
+}
