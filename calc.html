@@ -1432,21 +1432,25 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
             <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Baseline</div>
             <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;flex:1">
               <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
-                <span style="color:var(--muted)">Product cost</span>
-                <span id="b-prod" style="font-weight:700">$15.0K</span>
+                <span style="color:var(--muted)">In-market value</span>
+                <span id="b-inmarket-value" style="font-weight:700">$10,500</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
+                <span style="color:var(--muted)">Waste cost</span>
+                <span id="b-waste-cost" style="font-weight:700">$4,500</span>
               </div>
               <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
                 <span style="color:var(--muted)">Management fee</span>
-                <span id="b-mgmt" style="font-weight:700">$2.3K</span>
+                <span id="b-mgmt" style="font-weight:700">$2,250</span>
               </div>
               <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
                 <span style="color:var(--muted)">Units in-market</span>
-                <span id="b-inmarket" style="font-weight:700">7,000 units</span>
+                <span id="rc-b-inmarket" style="font-weight:700">7,000 units</span>
               </div>
             </div>
             <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px 18px">
               <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">Total Cost</div>
-              <div id="b-total" style="font-size:32px;font-weight:900;color:var(--text)">$17.3K</div>
+              <div id="rc-b-total" style="font-size:32px;font-weight:900;color:var(--text)">$17,250</div>
               <div style="font-size:12px;color:var(--muted);margin-top:4px">Your baseline</div>
             </div>
           </div>
@@ -1468,12 +1472,16 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
                 <span id="p1-ppu" style="font-weight:700;color:#FF8080">$1.35</span>
               </div>
               <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
-                <span style="color:var(--muted)">Product cost</span>
-                <span id="p1-prod" style="font-weight:700">$13.5K</span>
+                <span style="color:var(--muted)">In-market value</span>
+                <span id="p1-inmarket-value" style="font-weight:700">$9,450</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
+                <span style="color:var(--muted)">Waste cost</span>
+                <span id="p1-waste-cost" style="font-weight:700">$4,050</span>
               </div>
               <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
                 <span style="color:var(--muted)">Management fee</span>
-                <span id="p1-mgmt" style="font-weight:700">$2.0K</span>
+                <span id="p1-mgmt" style="font-weight:700">$2,025</span>
               </div>
               <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
                 <span style="color:var(--muted)">Units in-market</span>
@@ -1482,8 +1490,8 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
             </div>
             <div style="background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.2);border-radius:10px;padding:14px 18px">
               <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">Total Cost</div>
-              <div id="p1-total" style="font-size:32px;font-weight:900;color:var(--text)">$15.5K</div>
-              <div id="p1-save" style="font-size:12px;color:#FF8080;margin-top:4px">↓ Save $1.7K (10% less)</div>
+              <div id="p1-total" style="font-size:32px;font-weight:900;color:var(--text)">$15,525</div>
+              <div id="p1-save" style="font-size:12px;color:#FF8080;margin-top:4px">↓ Save $1,725 (10% less)</div>
             </div>
           </div>
 
@@ -1504,8 +1512,12 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
                 <span id="p2-waste" style="font-weight:700;color:#30E682">10%</span>
               </div>
               <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
-                <span style="color:var(--muted)">Product cost</span>
-                <span id="p2-prod" style="font-weight:700">$11.7K</span>
+                <span style="color:var(--muted)">In-market value</span>
+                <span id="p2-inmarket-value" style="font-weight:700">$10,500</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
+                <span style="color:var(--muted)">Waste cost</span>
+                <span id="p2-waste-cost" style="font-weight:700;color:#30E682">$1,167</span>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:8px">
                 <span style="color:var(--muted)">Managed service fee <span id="p2-mgmt-arrow" style="color:#30E682;font-size:11px">→ 5%</span></span>
@@ -1522,8 +1534,8 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
             </div>
             <div style="background:rgba(48,230,130,.08);border:1px solid rgba(48,230,130,.25);border-radius:10px;padding:14px 18px">
               <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">Total Cost</div>
-              <div id="p2-total" style="font-size:32px;font-weight:900;color:#30E682">$12.3K</div>
-              <div id="p2-save" style="font-size:12px;color:#30E682;margin-top:4px">↓ Save $5.0K (29% less)</div>
+              <div id="p2-total" style="font-size:32px;font-weight:900;color:#30E682">$12,250</div>
+              <div id="p2-save" style="font-size:12px;color:#30E682;margin-top:4px">↓ Save $5,000 (29% less)</div>
             </div>
           </div>
 
@@ -1619,6 +1631,9 @@ var CLIENT = {
     if(v>=1000) return '$'+(v/1000).toFixed(1)+'K';
     return '$'+Math.round(v);
   }
+  function fmtMoney(v){
+    return '$' + Math.round(v).toLocaleString();
+  }
   function fmtU(v){ return Math.round(v).toLocaleString(); }
 
   window.updateRC = function(){
@@ -1648,27 +1663,33 @@ var CLIENT = {
     var bMgmt = bProd * mgmtPct;
     var bTotal = bProd + bMgmt;
     var bInmarket = Math.round(units * (1 - wastePct));
+    var bInmarketValue = bInmarket * ppu;
+    var bWasteCost = bProd - bInmarketValue;
 
-    document.getElementById('b-prod').textContent = fmtK(bProd);
-    document.getElementById('b-mgmt').textContent = fmtK(bMgmt);
-    document.getElementById('b-total').textContent = fmtK(bTotal);
-    document.getElementById('b-inmarket').textContent = fmtU(bInmarket) + ' units';
+    document.getElementById('b-inmarket-value').textContent = fmtMoney(bInmarketValue);
+    document.getElementById('b-waste-cost').textContent = fmtMoney(bWasteCost);
+    document.getElementById('b-mgmt').textContent = fmtMoney(bMgmt);
+    document.getElementById('rc-b-total').textContent = fmtMoney(bTotal);
+    document.getElementById('rc-b-inmarket').textContent = fmtU(bInmarket) + ' units';
 
     // Option 1: price shopping — same order qty, configurable unit price discount, same waste & mgmt
     var p1Ppu = ppu * (1 - discountPct / 100);
     var p1Prod = units * p1Ppu;
     var p1Mgmt = p1Prod * mgmtPct;
     var p1Total = p1Prod + p1Mgmt;
+    var p1InmarketValue = bInmarket * p1Ppu;
+    var p1WasteCost = p1Prod - p1InmarketValue;
     var p1Saving = bTotal - p1Total;
     var p1Pct = Math.round((p1Saving / bTotal) * 100);
 
     document.getElementById('p1-units').textContent = fmtU(units);
     document.getElementById('p1-ppu').textContent = '$' + p1Ppu.toFixed(2);
-    document.getElementById('p1-prod').textContent = fmtK(p1Prod);
-    document.getElementById('p1-mgmt').textContent = fmtK(p1Mgmt);
-    document.getElementById('p1-total').textContent = fmtK(p1Total);
+    document.getElementById('p1-inmarket-value').textContent = fmtMoney(p1InmarketValue);
+    document.getElementById('p1-waste-cost').textContent = fmtMoney(p1WasteCost);
+    document.getElementById('p1-mgmt').textContent = fmtMoney(p1Mgmt);
+    document.getElementById('p1-total').textContent = fmtMoney(p1Total);
     document.getElementById('p1-inmarket').textContent = fmtU(bInmarket) + ' units';
-    document.getElementById('p1-save').textContent = '↓ Save ' + fmtK(p1Saving) + ' (' + p1Pct + '% less)';
+    document.getElementById('p1-save').textContent = '↓ Save ' + fmtMoney(p1Saving) + ' (' + p1Pct + '% less)';
     var p1DiscLabel = '−' + discountPct + '%';
     var p1Title = document.getElementById('p1-disc-title');
     var p1Badge = document.getElementById('p1-disc-badge');
@@ -1684,6 +1705,9 @@ var CLIENT = {
     var p2Prod = p2Units * ppu;
     var p2Mgmt = p2Prod * p2MgmtPct;
     var p2Total = p2Prod + p2Mgmt;
+    var p2WasteUnits = Math.max(0, p2Units - bInmarket);
+    var p2InmarketValue = bInmarket * ppu;
+    var p2WasteCost = p2WasteUnits * ppu;
     var p2Saving = bTotal - p2Total;
     var p2Pct = Math.round((p2Saving / bTotal) * 100);
     var p2WasteLabel = Math.round(p2WastePct * 100) + '%';
@@ -1692,9 +1716,10 @@ var CLIENT = {
     document.getElementById('p2-units').textContent = fmtU(p2Units);
     document.getElementById('p2-ppu').textContent = '$' + ppu.toFixed(2);
     document.getElementById('p2-waste').textContent = p2WasteLabel;
-    document.getElementById('p2-prod').textContent = fmtK(p2Prod);
-    document.getElementById('p2-mgmt').textContent = fmtK(p2Mgmt);
-    document.getElementById('p2-total').textContent = fmtK(p2Total);
+    document.getElementById('p2-inmarket-value').textContent = fmtMoney(p2InmarketValue);
+    document.getElementById('p2-waste-cost').textContent = fmtMoney(p2WasteCost);
+    document.getElementById('p2-mgmt').textContent = fmtMoney(p2Mgmt);
+    document.getElementById('p2-total').textContent = fmtMoney(p2Total);
     document.getElementById('p2-inmarket').textContent = fmtU(bInmarket) + ' units';
     // Update arrow labels dynamically
     var wEl = document.getElementById('p2-waste-arrow');
@@ -1702,10 +1727,10 @@ var CLIENT = {
     if(wEl) wEl.textContent = '→ ' + p2WasteLabel;
     if(mEl) mEl.textContent = '→ ' + p2MgmtLabel;
     if(p2Saving >= 0){
-      document.getElementById('p2-save').textContent = '↓ Save ' + fmtK(p2Saving) + ' (' + p2Pct + '% less)';
+      document.getElementById('p2-save').textContent = '↓ Save ' + fmtMoney(p2Saving) + ' (' + p2Pct + '% less)';
       document.getElementById('p2-save').style.color = '#30E682';
     } else {
-      document.getElementById('p2-save').textContent = '↑ Costs ' + fmtK(-p2Saving) + ' more (' + (-p2Pct) + '% more)';
+      document.getElementById('p2-save').textContent = '↑ Costs ' + fmtMoney(-p2Saving) + ' more (' + (-p2Pct) + '% more)';
       document.getElementById('p2-save').style.color = '#FF8080';
     }
   };
@@ -2098,6 +2123,7 @@ function saveDiscoAnswers() {
   function fmtU(n) { return Math.round(n).toLocaleString(); }
 
   function updatePrintCalc() {
+    if (!document.getElementById('pi-units') || !document.getElementById('pp-c-prod')) return;
     var units = parseFloat(document.getElementById('pi-units').value) || 10000;
     var price = parseFloat(document.getElementById('pi-price').value) || 1.50;
     var waste = parseFloat(document.getElementById('pi-waste').value) || 30;
@@ -2126,36 +2152,36 @@ function saveDiscoAnswers() {
     var bhInMkt  = Math.round(bhUnits * (1 - bhWaste / 100));
 
     // ── Write Current ────────────────────────────────────────────────────
-    document.getElementById('c-prod').textContent     = fmtC(cProd);
-    document.getElementById('c-fee').textContent      = fmtC(cFeeAmt);
-    document.getElementById('c-inmarket').textContent = fmtU(cInMkt) + ' units';
-    document.getElementById('c-total').textContent    = fmtC(cTotal);
+    document.getElementById('pp-c-prod').textContent     = fmtC(cProd);
+    document.getElementById('pp-c-fee').textContent      = fmtC(cFeeAmt);
+    document.getElementById('pp-c-inmarket').textContent = fmtU(cInMkt) + ' units';
+    document.getElementById('pp-c-total').textContent    = fmtC(cTotal);
 
     // ── Write Option 1 ───────────────────────────────────────────────────
-    document.getElementById('p-units').textContent    = fmtU(units);
-    document.getElementById('p-price').textContent    = '$' + pPrice.toFixed(2);
-    document.getElementById('p-waste').textContent    = waste + '%';
-    document.getElementById('p-fee').textContent      = fee + '%';
-    document.getElementById('p-prod').textContent     = fmtC(pProd);
-    document.getElementById('p-feeval').textContent   = fmtC(pFeeAmt);
-    document.getElementById('p-inmarket').textContent = fmtU(pInMkt) + ' units';
-    document.getElementById('p-total').textContent    = fmtC(pTotal);
+    document.getElementById('pp-p-units').textContent    = fmtU(units);
+    document.getElementById('pp-p-price').textContent    = '$' + pPrice.toFixed(2);
+    document.getElementById('pp-p-waste').textContent    = waste + '%';
+    document.getElementById('pp-p-fee').textContent      = fee + '%';
+    document.getElementById('pp-p-prod').textContent     = fmtC(pProd);
+    document.getElementById('pp-p-feeval').textContent   = fmtC(pFeeAmt);
+    document.getElementById('pp-p-inmarket').textContent = fmtU(pInMkt) + ' units';
+    document.getElementById('pp-p-total').textContent    = fmtC(pTotal);
     var pSave = cTotal - pTotal;
     var pPct  = Math.round((pSave / cTotal) * 100);
-    var pDel  = document.getElementById('p-delta');
+    var pDel  = document.getElementById('pp-p-delta');
     pDel.textContent = pSave > 0 ? '↓ Save ' + fmtC(pSave) + ' (' + pPct + '% less)' : 'No savings vs baseline';
     pDel.className   = 'pc-delta ' + (pSave > 5 ? 'small-save' : 'neutral');
 
     // ── Write brandhub ────────────────────────────────────────────────────
-    document.getElementById('b-units').textContent    = fmtU(bhUnits);
-    document.getElementById('b-price').textContent    = '$' + price.toFixed(2);
-    document.getElementById('b-prod').textContent     = fmtC(bhProd);
-    document.getElementById('b-feeval').textContent   = fmtC(bhFeeAmt);
-    document.getElementById('b-inmarket').textContent = fmtU(bhInMkt) + ' units';
-    document.getElementById('b-total').textContent    = fmtC(bhTotal);
+    document.getElementById('pp-b-units').textContent    = fmtU(bhUnits);
+    document.getElementById('pp-b-price').textContent    = '$' + price.toFixed(2);
+    document.getElementById('pp-b-prod').textContent     = fmtC(bhProd);
+    document.getElementById('pp-b-feeval').textContent   = fmtC(bhFeeAmt);
+    document.getElementById('pp-b-inmarket').textContent = fmtU(bhInMkt) + ' units';
+    document.getElementById('pp-b-total').textContent    = fmtC(bhTotal);
     var bSave = cTotal - bhTotal;
     var bPct  = Math.round((bSave / cTotal) * 100);
-    var bDel  = document.getElementById('b-delta');
+    var bDel  = document.getElementById('pp-b-delta');
     bDel.textContent = bSave > 0 ? '↓ Save ' + fmtC(bSave) + ' (' + bPct + '% less)' : 'No savings vs baseline';
     bDel.className   = 'pc-delta ' + (bSave > 5 ? 'saving' : 'neutral');
   }
